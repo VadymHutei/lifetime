@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>life</title>
-</head>
-<body>
-<main>
-    <h1>Life</h1>
-    <p>today_date: {{ today_date }}</p>
-    <p>birth_date: {{ birth_date }}</p>
-    <p>life_length: {{ life_length }}</p>
-    <p>death_date: {{ death_date }}</p>
-    <p>life left: {{ years_left }} years {{ months_left }} months {{ days_left }} days</p>
-    <a href="/">to home</a>
-</main>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}LifeTime result{% endblock %}
+
+{% block content %}
+<h1>LifeTime</h1>
+<p>today_date: {{ today_date }}</p>
+<p>birth_date: {{ birth_date }}</p>
+<p>life_length: {{ life_length }}</p>
+<p>death_date: {{ death_date }}</p>
+<p>life left: {{ years_left }} years {{ months_left }} months {{ days_left }} days</p>
+<a href="/">to home</a>
+{% endblock %}
