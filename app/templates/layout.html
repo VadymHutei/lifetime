@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-    {% include 'gtag.html' %}
-    <meta charset="utf-8">
-    <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
-<main>
-    {% block content %}{% endblock %}
-</main>
-</body>
+    <head>
+        {% include 'gtag.html' %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Find out how much you have left to live"> 
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+        <link rel="manifest" href="/static/site.webmanifest">
+    </head>
+    <body>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        <footer>
+            <p><a href="https://github.com/VadymHutei/lifetime">GitHub</a></p>
+            <p>&copy; 2020 Vadym Hutei</p>
+        </footer>
+    </body>
 </html>
