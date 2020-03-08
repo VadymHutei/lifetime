@@ -1,3 +1,17 @@
+sex = {
+    'o': ('Overall', 0),
+    'f': ('Female', 1),
+    'm': ('Male', 2)
+}
+world = (72.6, 74.9, 70.4)
+regions = {
+    'Arab States': (71.9, 73.8, 70.2),
+    'Latin America and the Caribbean': (75.4, 78.6, 72.3),
+    'East Asia, Southeast Asia and Oceania': (75.3, 77.8, 72.9),
+    'Europe and Central Asia': (74.2, 77.5, 70.8),
+    'South Asia': (69.7, 71.1, 68.5),
+    'Sub-Saharan Africa': (61.2, 62.9, 59.4)
+}
 countries = {
     'Afghanistan': (64.5, 66.0, 63.0),
     'Algeria': (76.7, 77.9, 75.5),
@@ -180,12 +194,3 @@ countries = {
     'Zambia': (63.5, 66.4, 60.5),
     'Zimbabwe': (61.2, 62.6, 59.5)
 }
-regions = {
-    'Arab States': (71.9, 73.8, 70.2),
-    'Latin America and the Caribbean': (75.4, 78.6, 72.3),
-    'East Asia, Southeast Asia and Oceania': (75.3, 77.8, 72.9),
-    'Europe and Central Asia': (74.2, 77.5, 70.8),
-    'South Asia': (69.7, 71.1, 68.5),
-    'Sub-Saharan Africa': (61.2, 62.9, 59.4)
-}
-world = (72.6, 74.9, 70.4)
