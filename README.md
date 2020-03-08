@@ -1,14 +1,18 @@
 # LifeTime
 [LifeTime](http://lifetime.hutei.net/)
 
-## install docker
+## start service
 ```bash
 sudo apt install docker.io
-```
-
-## create and run container
-```bash
-docker stop lifetime_app && docker rm lifetime_app
+sudo apt install git
+git clone https://github.com/VadymHutei/lifetime.git
+cd lifetime
 docker build -t lifetime_app .
 docker run --name lifetime_app -d --restart always -p 80:80 lifetime_app
+```
+
+## update service
+```bash
+chmod +x ./rebuild.sh
+./rebuild.sh
 ```
