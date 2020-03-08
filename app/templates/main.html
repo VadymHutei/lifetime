@@ -1,6 +1,35 @@
 {% extends "layout.html" %}
 
-{% block title %}LifeTime{% endblock %}
+{% block title %}LifeTime - how long will you live{% endblock %}
+
+{% block description %}Find out how much you have left to live{% endblock %}
+
+{% block opengraph %}
+<meta name="og:title" content="LifeTime - how long will you live">
+<meta name="og:description" content="Find out how much you have left to live">
+<meta name="og:url" content="http://lifetime.hutei.net/">
+<meta name="og:site_name" content="LifeTime">
+<meta name="og:type" content="website">
+{% endblock %}
+
+{% block schemaorg %}
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "WebSite",
+        "name": "LifeTime",
+        "url": "http://lifetime.hutei.net/",
+        "copyrightYear": 2020,
+        "creator": {
+            "@type": "Person",
+            "name": "Vadym Hutei",
+            "url": "",
+            "image": "",
+            "sameAs": "https://github.com/VadymHutei"  
+        }
+    }
+</script>
+{% endblock %}
 
 {% block content %}
 <h1>LifeTime</h1>
