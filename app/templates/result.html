@@ -4,10 +4,36 @@
 
 {% block content %}
 <h1>LifeTime</h1>
-<p>today_date: {{ today_date }}</p>
-<p>birth_date: {{ birth_date }}</p>
-<p>life_length: {{ life_length }}</p>
-<p>death_date: {{ death_date }}</p>
-<p>life left: {{ years_left }} years {{ months_left }} months {{ days_left }} days</p>
+<table>
+    <caption>Initial data</caption>
+    <tbody>
+        <tr>
+            <td>Date of birth</td>
+            <td>{{ birth_date }}</td>
+        </tr>
+        <tr>
+            <td>Today</td>
+            <td>{{ today_date }}</td>
+        </tr>
+        <tr>
+            <td>Already lived</td>
+            <td>{{ lived['years'] }} years {{ lived['months'] }} months</td>
+        </tr>
+        <tr>
+            <td>Sex</td>
+            <td>{{ sex }}</td>
+        </tr>
+        <tr>
+            <td>Country</td>
+            <td>{{ country }}</td>
+        </tr>
+        <tr>
+            <td>Estimated life expectancy</td>
+            <td>{{ life_length['years'] }} years {{ life_length['months'] }} months</td>
+        </tr>
+    </tbody>
+</table>
+<p>Expected date of death: {{ death_date }}</p>
+<p>Left to live: {{ life_left['years'] }} years {{ life_left['months'] }} months {{ life_left['days'] }} days</p>
 <a href="/">to home</a>
 {% endblock %}

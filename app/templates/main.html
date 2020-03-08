@@ -7,7 +7,7 @@
 <form action="/result" method="get">
     <fieldset>
         <legend>Country</legend>
-        <select>
+        <select name="country">
             <option value="World" selected>World</option>
             <optgroup label="Regions">
                 {% for region in regions: %}
@@ -23,17 +23,18 @@
     </fieldset>
     <fieldset>
         <legend>Date of birth</legend>
-        <input type="date" name="birth_date">
+        <input type="date" name="birth_date" required>
     </fieldset>
     <fieldset>
         <legend>Sex</legend>
+        <input type="radio" name="sex" value="o" hidden checked>
         <label>
             <input type="radio" name="sex" value="m">
-            m
+            {{ sex['m'][0] }}
         </label>
         <label>
             <input type="radio" name="sex" value="f">
-            f
+            {{ sex['f'][0] }}
         </label>
     </fieldset>
     <input type="submit">
