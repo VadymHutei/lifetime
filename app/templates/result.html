@@ -32,7 +32,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>LifeTime</h1>
+<h1>Your result</h1>
 <table>
     <caption>Initial data</caption>
     <tbody>
@@ -63,6 +63,6 @@
     </tbody>
 </table>
 <p>Expected date of death: {{ death_date }}</p>
-<p>Left to live: {{ life_left['years'] }} years {{ life_left['months'] }} months {{ life_left['days'] }} days</p>
+<p>Left to live: <span class="lifeleft">{{ life_left['years'] }} years {{ life_left['months'] }} months {{ life_left['days'] }} days</span></p>
 <a href="/">to home</a>
 {% endblock %}

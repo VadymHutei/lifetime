@@ -9,18 +9,21 @@
         <title>{% block title %}{% endblock %}</title>
         {% block opengraph %}{% endblock %}
         {% block schemaorg %}{% endblock %}
-        <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
         <link rel="manifest" href="/static/site.webmanifest">
+        <link rel="stylesheet" type="text/css" href="/static/css/main.css">
     </head>
     <body>
         <main>
             {% block content %}{% endblock %}
         </main>
         <footer>
-            <p><a href="https://github.com/VadymHutei/lifetime">GitHub</a></p>
-            <p>&copy; 2020 <a href="https://github.com/VadymHutei">Vadym Hutei</a></p>
+            <div class="copyright_block">
+                <p><span class="copyright_text"><a href="https://github.com/VadymHutei/lifetime">GitHub</a></span></p>
+                <p><span class="copyright_text">&copy; 2020 <a href="https://github.com/VadymHutei">Vadym Hutei</a></span></p>
+            </div>
         </footer>
     </body>
 </html>
