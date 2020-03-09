@@ -3,7 +3,9 @@ import math
 
 from flask import Flask, render_template, request, abort
 from dateutil.relativedelta import relativedelta
+import pymysql
 
+import config
 import data
 
 app = Flask(__name__)
@@ -84,3 +86,38 @@ def result():
     }
 
     return render_template('result.html', **params)
+
+@app.route('/<path:url>')
+@app.route('/<string:url>')
+def other(url=''):
+    connection = pymysql.connect(
+        **config.db,
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    try:
+        with connection.cursor() as cursor:
+            query = """
+                INSERT
+                    INTO `log`
+                        (
+                            `ip`,
+                            `url`,
+                            `method`,
+                            `date`
+                        )
+                    VALUES
+                        (%s, %s, %s, %s)
+            """
+            cursor.execute(
+                query,
+                (
+                    request.remote_addr,
+                    url,
+                    request.method,
+                    date.today()
+                )
+            )
+        connection.commit()
+    finally:
+        connection.close()
+    abort(400)
