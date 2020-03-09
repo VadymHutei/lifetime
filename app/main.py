@@ -114,7 +114,7 @@ def other(url=''):
                     request.remote_addr,
                     url,
                     request.method,
-                    date.today()
+                    datetime.now()
                 )
             )
         connection.commit()
