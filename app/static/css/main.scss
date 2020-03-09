@@ -50,10 +50,11 @@ html {
         background-color: $background_color_base;
         header {}
         main {
+            padding: 1em;
             flex-grow: 1;
             width: 100%;
             max-width: 40em;
-            padding: 1em;
+            box-sizing: border-box;
         }
         footer {
             .copyright_block {
