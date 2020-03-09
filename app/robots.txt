@@ -1,0 +1,4 @@
+Sitemap: http://lifetime.hutei.net/static/sitemap.xml
+
+User-agent: *
+Disallow: /result
