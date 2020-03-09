@@ -27,7 +27,8 @@ html {
           -ms-flex-positive: 1;
               flex-grow: 1;
       width: 100%;
-      max-width: 40em; }
+      max-width: 40em;
+      padding: 1em; }
     html body footer .copyright_block {
       margin: 0.5em;
       text-align: center; }
