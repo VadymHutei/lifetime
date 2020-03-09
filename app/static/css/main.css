@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+html, head, body, header, main, footer, section, div, h1, h2, h3, h4, h5, h6, p {
+  display: block;
+  margin: 0;
+  padding: 0; }
+
+html {
+  height: 100%;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  color: #eee; }
+  html body {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: column;
+            flex-flow: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    min-height: 100%;
+    background-color: #444; }
+    html body main {
+      -webkit-box-flex: 1;
+          -ms-flex-positive: 1;
+              flex-grow: 1;
+      width: 100%;
+      max-width: 40em; }
+    html body footer .copyright_block {
+      margin: 0.5em;
+      text-align: center; }
+      html body footer .copyright_block p {
+        margin: 0.3em 0; }
+      html body footer .copyright_block .copyright_text {
+        font-size: 0.8em;
+        color: #aaa; }
+
+a:link {
+  color: #83a9ff; }
+a:visited {
+  color: #bc14f3; }
+
+form fieldset {
+  margin: 1em 0.2em;
+  padding: 1em; }
+form input, form select {
+  padding: 0.5em 1em;
+  border: 2px solid #eee;
+  border-radius: 0.5em;
+  background-color: #3c5e75;
+  color: #eee; }
+
+table {
+  margin: 1em 0;
+  width: 100%; }
+  table tr:nth-child(even) {
+    background-color: #4b6373; }
+  table tr:nth-child(odd) {
+    background-color: #3c5e75; }
+  table tr td {
+    padding: 0.5em; }
+
+.lifeleft {
+  font-size: 1.5em;
+  font-weight: bold; }

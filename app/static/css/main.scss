@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+$color_black: #000;
+$color_white: #fff;
+
+$color_gray_0: #000;
+$color_gray_1: #111;
+$color_gray_2: #222;
+$color_gray_3: #333;
+$color_gray_4: #444;
+$color_gray_5: #555;
+$color_gray_6: #666;
+$color_gray_7: #777;
+$color_gray_8: #888;
+$color_gray_9: #999;
+$color_gray_a: #aaa;
+$color_gray_b: #bbb;
+$color_gray_c: #ccc;
+$color_gray_d: #ddd;
+$color_gray_e: #eee;
+$color_gray_f: #fff;
+
+$base_font_size: 16px;
+$base_font_family: 'Roboto', sans-serif;
+
+$text_color_base: $color_gray_e;
+$text_color_copyright: $color_gray_a;
+$text_size_copyright: 0.8em;
+
+$background_color_base: $color_gray_4;
+
+
+html, head, body, header, main, footer, section, div, h1, h2, h3, h4, h5, h6, p {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+    font-size: $base_font_size;
+    font-family: 'Roboto', sans-serif;
+    color: $text_color_base;
+    
+    body {
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        min-height: 100%;
+        background-color: $background_color_base;
+        header {}
+        main {
+            flex-grow: 1;
+            width: 100%;
+            max-width: 40em;
+        }
+        footer {
+            .copyright_block {
+                margin: 0.5em;
+                text-align: center;
+                p {
+                    margin: 0.3em 0;
+                }
+                .copyright_text {
+                    font-size: $text_size_copyright;
+                    color: $text_color_copyright;
+                }
+            }
+        }        
+    }
+}
+
+a {
+    &:link {
+        color: #83a9ff;;
+    }
+    &:visited {
+        color: #bc14f3;
+    }
+}
+
+form {
+    fieldset {
+        margin: 1em 0.2em;
+        padding: 1em;
+    }
+    legend {}
+    select {
+        optgroup {}
+        option {}
+    }
+    input {}
+    input, select {
+        padding: 0.5em 1em;
+        border: 2px solid #eee;
+        border-radius: 0.5em;
+        background-color: #3c5e75;
+        color: #eee;
+    }
+}
+
+table {
+    margin: 1em 0;
+    width: 100%;
+    caption {}
+    thead {}
+    tbody {}
+    tfoot {}
+    tr {
+        &:nth-child(even) {
+            background-color: #4b6373;
+        }
+        &:nth-child(odd) {
+            background-color: #3c5e75;
+        }
+        td {
+            padding: 0.5em;
+        }
+    }
+}
+
+.lifeleft {
+    font-size: 1.5em;
+    font-weight: bold;
+}
