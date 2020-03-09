@@ -1,5 +1,5 @@
 db = {
-    'host': '127.0.0.1',
+    'host': 'lifetime.hutei.net',
     'user': 'root',
     'password': 'root',
     'db': 'lifetime',
