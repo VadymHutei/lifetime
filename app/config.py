@@ -1,5 +1,5 @@
 db = {
-    'host': 'localhost',
+    'host': 'mysql',
     'user': 'root',
     'password': 'root',
     'db': 'lifetime',
