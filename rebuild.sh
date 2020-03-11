@@ -12,4 +12,4 @@ git pull origin master
 docker build -t lifetime_app .
 docker run --name lifetime_app -d --restart always -p 80:80 lifetime_app
 
-docker run --name mysql -d --restart always -v /home/mysql_data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 mysql:5
+docker run --name mysql -d --restart always -v /home/mysql_data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=StrongPass -p 3306:3306 mysql:5
