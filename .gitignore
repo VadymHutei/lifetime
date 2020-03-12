@@ -1,5 +1,11 @@
+# rebuild.sh
+/rebuild.sh
+
 # venv
-app/env/
+/app/env/
+
+# app
+/app/config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
