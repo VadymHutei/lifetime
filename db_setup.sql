@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
--- Сервер:                       127.0.0.1
--- Версія сервера:               5.7.28 - MySQL Community Server (GPL)
+-- Сервер:                       lifetime.hutei.net
+-- Версія сервера:               5.7.29 - MySQL Community Server (GPL)
 -- ОС сервера:                   Linux
 -- HeidiSQL Версія:              10.3.0.5771
 -- --------------------------------------------------------
@@ -13,12 +13,20 @@
 
 
 -- Dumping database structure for lifetime
-DROP DATABASE IF EXISTS `lifetime`;
 CREATE DATABASE IF NOT EXISTS `lifetime` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 USE `lifetime`;
 
+-- Dumping structure for таблиця lifetime.languages
+CREATE TABLE IF NOT EXISTS `languages` (
+  `code` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `default` enum('Y','N') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Дані для експорту не вибрані
+
 -- Dumping structure for таблиця lifetime.log
-DROP TABLE IF EXISTS `log`;
 CREATE TABLE IF NOT EXISTS `log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ip` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -27,6 +35,18 @@ CREATE TABLE IF NOT EXISTS `log` (
   `date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ip` (`ip`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Дані для експорту не вибрані
+
+-- Dumping structure for таблиця lifetime.translations
+CREATE TABLE IF NOT EXISTS `translations` (
+  `code` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lang` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `translate` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`code`,`lang`),
+  KEY `FK_translations_languages` (`lang`),
+  CONSTRAINT `FK_translations_languages` FOREIGN KEY (`lang`) REFERENCES `languages` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Дані для експорту не вибрані
