@@ -1,9 +1,17 @@
 from datetime import date, datetime
 import math
 
-from flask import Flask, render_template, request, abort
+from flask import (
+    Flask,
+    render_template,
+    request,
+    abort,
+    redirect,
+    url_for
+)
 from dateutil.relativedelta import relativedelta
 import pymysql
+from functools import wraps
 
 import config
 import data
@@ -11,8 +19,81 @@ import data
 app = Flask(__name__)
 
 
+def getLanguages():
+    connection = pymysql.connect(
+        **config.db,
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    try:
+        with connection.cursor() as cursor:
+            query = """
+                SELECT
+                    `code`,
+                    `name`,
+                    `default`
+                FROM
+                    `languages`
+            """
+            cursor.execute(query)
+            result = cursor.fetchall()
+    finally:
+        connection.close()
+    languages = {}
+    default_language = None
+    for lang in result:
+        languages[lang['code']] = lang['name']
+        if lang['default'] == 'Y':
+            default_language = lang['code']
+    return languages, default_language
+
+def getTranlations():
+    connection = pymysql.connect(
+        **config.db,
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    try:
+        with connection.cursor() as cursor:
+            query = """
+                SELECT
+                    `code`,
+                    `lang`,
+                    `translate`
+                FROM
+                    `translations`
+            """
+            cursor.execute(query)
+            result = cursor.fetchall()
+    finally:
+        connection.close()
+    translations = {}
+    for t in result:
+        code = t['code']
+        lang = t['lang']
+        translate = t['translate']
+        if code not in translations:
+            translations[code] = {}
+        translations[code][lang] = translate
+    return translations
+
+def lang_redirect(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        language = kwargs.get('language', False)
+        if language:
+            if language not in languages:
+                return redirect(url_for(f.__name__))
+            if language == lang.default_language:
+                return redirect(url_for(f.__name__))
+        return f(*args, **kwargs)
+    return decorated_function
+
+languages, default_language = getLanguages()
+translations = getTranlations()
+
 @app.route('/', methods=['GET'])
-def main():
+@app.route('/<language>/', methods=['GET'])
+@lang_redirect
+def main(language=lang.default_language):
     params = {
         'countries': data.countries,
         'regions': data.regions,
@@ -23,7 +104,9 @@ def main():
 
 
 @app.route('/result', methods=['GET'])
-def result():
+@app.route('/<language>/result', methods=['GET'])
+@lang_redirect
+def result(language=lang.default_language):
     birth_date = request.args.get('birth_date')
     if not birth_date:
         abort(400)
