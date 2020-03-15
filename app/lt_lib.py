@@ -41,7 +41,7 @@ def getTranlations():
                 SELECT
                     `code`,
                     `lang`,
-                    `translate`
+                    `translation`
                 FROM
                     `translations`
             """
@@ -53,10 +53,10 @@ def getTranlations():
     for t in result:
         code = t['code']
         lang = t['lang']
-        translate = t['translate']
+        translation = t['translation']
         if code not in translations:
             translations[code] = {}
-        translations[code][lang] = translate
+        translations[code][lang] = translation
     return translations
 
 def getLifeExp():
@@ -131,7 +131,7 @@ def getGenders():
 
 def getTranslator(translations, language):
     def translate(code):
-        return translations[code][language] if code in translations else code
+        return translations[code].get(language, code) if code in translations else code
     return translate
 
 def log(ip, url, method, time):
@@ -143,15 +143,15 @@ def log(ip, url, method, time):
         with connection.cursor() as cursor:
             query = """
                 INSERT
-                    INTO `log`
-                        (
-                            `ip`,
-                            `url`,
-                            `method`,
-                            `date`
-                        )
-                    VALUES
-                        (%s, %s, %s, %s)
+                INTO `log`
+                    (
+                        `ip`,
+                        `url`,
+                        `method`,
+                        `date`
+                    )
+                VALUES
+                    (%s, %s, %s, %s)
             """
             cursor.execute(
                 query,
@@ -162,6 +162,87 @@ def log(ip, url, method, time):
                     time
                 )
             )
+        connection.commit()
+    finally:
+        connection.close()
+
+def setTranslations(code, translations):
+    connection = pymysql.connect(
+        **config.db,
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    try:
+        with connection.cursor() as cursor:
+            for language, translation in translations.items():
+                query = """
+                    INSERT
+                    INTO `translations`
+                        (
+                            `code`,
+                            `lang`,
+                            `translation`
+                        )
+                    VALUES
+                        (%s, %s, %s)
+                    ON DUPLICATE KEY UPDATE
+                        `translation` = %s
+                """
+                cursor.execute(
+                    query,
+                    (
+                        code,
+                        language,
+                        translation,
+                        translation
+                    )
+                )
+                connection.commit()
+    finally:
+        connection.close()
+
+def updateTranslations(code, translations):
+    connection = pymysql.connect(
+        **config.db,
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    try:
+        with connection.cursor() as cursor:
+            for language, translation in translations.items():
+                query = """
+                    UPDATE `translations`
+                    SET
+                        `translation` = %s
+                    WHERE
+                        `code` = %s
+                    AND
+                        `lang` = %s
+                """
+                cursor.execute(
+                    query,
+                    (
+                        translation,
+                        code,
+                        language
+                    )
+                )
+                connection.commit()
+    finally:
+        connection.close()
+
+def deleteTranslation(code):
+    connection = pymysql.connect(
+        **config.db,
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    try:
+        with connection.cursor() as cursor:
+            query = """
+                DELETE
+                FROM `translations`
+                WHERE
+                    `code` = %s
+            """
+            cursor.execute(query, (code,))
         connection.commit()
     finally:
         connection.close()
