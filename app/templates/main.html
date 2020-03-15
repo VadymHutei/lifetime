@@ -37,15 +37,15 @@
     <fieldset>
         <legend>{{ translate('country').capitalize() }}</legend>
         <select name="country">
-            <option value="{{ world['id'] }}" selected>{{ world['name'] }}</option>
+            <option value="{{ world['id'] }}" selected>{{ world['name'][language] }}</option>
             <optgroup label="Regions">
                 {% for region_id in regions: %}
-                <option value="{{ region_id }}">{{ regions[region_id]['name'] }}</option>
+                <option value="{{ region_id }}">{{ regions[region_id]['name'][language] }}</option>
                 {% endfor %}
             </optgroup>
             <optgroup label="Countries">
                 {% for country_id in countries: %}
-                <option value="{{ country_id }}">{{ countries[country_id]['name'] }}</option>
+                <option value="{{ country_id }}">{{ countries[country_id]['name'][language] }}</option>
                 {% endfor %}
             </optgroup>
         </select>

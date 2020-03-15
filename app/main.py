@@ -24,7 +24,7 @@ app = Flask(__name__)
 
 languages, default_language = lt_lib.getLanguages()
 translations = lt_lib.getTranlations()
-world, regions, countries = lt_lib.getLifeExp()
+world, regions, countries, life_exp_data = lt_lib.getLifeExp()
 genders = lt_lib.getGenders()
 
 
@@ -34,9 +34,9 @@ def lang_redirect(f):
         language = kwargs.get('language', False)
         if language:
             if language not in languages:
-                return redirect(url_for(f.__name__))
+                return redirect(url_for(f.__name__, **request.args))
             if language == default_language:
-                return redirect(url_for(f.__name__))
+                return redirect(url_for(f.__name__, **request.args))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -140,27 +140,17 @@ def result(language=default_language):
         abort(400)
     birth_date = datetime.strptime(birth_date, '%Y-%m-%d').date()
 
-    sex = request.args.get('sex', 'o')
-    if not sex:
-        sex = 'o'
-    if sex not in data.sex:
+    gender = int(request.args.get('sex', '1'))
+    if gender not in genders:
         abort(400)
 
-    country = request.args.get('country', 'World')
-    if not country:
-        country = 'World'
-    if country == 'World':
-        life_length_data = data.world
-    elif country in data.countries:
-        life_length_data = data.countries[country]
-    elif country in data.regions:
-        life_length_data = data.regions[country]
-    else:
+    country_id = int(request.args.get('country', '181'))
+    if country_id not in life_exp_data:
         abort(400)
+    life_exp = life_exp_data.get(country_id)
 
-    data_number = data.sex[sex][1]
-    life_length_years = math.trunc(life_length_data[data_number])
-    life_length_months = round(12 * math.modf(life_length_data[data_number])[0])
+    life_length_years = math.trunc(life_exp[gender])
+    life_length_months = round(12 * math.modf(life_exp[gender])[0])
     life_length = relativedelta(
         years=life_length_years,
         months=life_length_months
@@ -188,8 +178,8 @@ def result(language=default_language):
             'months': life_left.months,
             'days': life_left.days
         },
-        'sex': data.sex[sex][0],
-        'country': country,
+        'sex': genders[gender][language]['name'],
+        'country': country_id,
         'lived': {
             'years': abs(lived.years),
             'months': abs(lived.months)
