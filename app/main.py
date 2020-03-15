@@ -1,5 +1,6 @@
 from datetime import date, datetime
 import math
+from functools import wraps
 
 from flask import (
     Flask,
@@ -15,8 +16,17 @@ import config
 import data
 import lt_lib
 
+def foo():
+    return 'bar'
+
 
 app = Flask(__name__)
+
+languages, default_language = lt_lib.getLanguages()
+translations = lt_lib.getTranlations()
+world, regions, countries = lt_lib.getLifeExp()
+genders = lt_lib.getGenders()
+
 
 def lang_redirect(f):
     @wraps(f)
@@ -25,23 +35,24 @@ def lang_redirect(f):
         if language:
             if language not in languages:
                 return redirect(url_for(f.__name__))
-            if language == lang.default_language:
+            if language == default_language:
                 return redirect(url_for(f.__name__))
         return f(*args, **kwargs)
     return decorated_function
 
-languages, default_language = getLanguages()
-translations = getTranlations()
 
 @app.route('/', methods=['GET'])
 @app.route('/<language>/', methods=['GET'])
 @lang_redirect
-def main(language=lang.default_language):
+def main(language=default_language):
     params = {
-        'countries': data.countries,
-        'regions': data.regions,
-        'world': data.world,
-        'sex': data.sex
+        'translate': lt_lib.getTranslator(translations, language),
+        'language': language,
+        'translations': {t: v[language] for t, v in translations.items()},
+        'countries': countries,
+        'regions': regions,
+        'world': world,
+        'genders': genders
     }
     return render_template('main.html', **params)
 
@@ -49,7 +60,7 @@ def main(language=lang.default_language):
 @app.route('/result', methods=['GET'])
 @app.route('/<language>/result', methods=['GET'])
 @lang_redirect
-def result(language=lang.default_language):
+def result(language=default_language):
     birth_date = request.args.get('birth_date')
     if not birth_date:
         abort(400)
