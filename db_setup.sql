@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `log` (
   `date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ip` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Дані для експорту не вибрані
 
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `log` (
 CREATE TABLE IF NOT EXISTS `translations` (
   `code` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lang` char(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `translate` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `translation` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`code`,`lang`),
   KEY `FK_translations_languages` (`lang`),
   CONSTRAINT `FK_translations_languages` FOREIGN KEY (`lang`) REFERENCES `languages` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION

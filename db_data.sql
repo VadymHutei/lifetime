@@ -799,7 +799,7 @@ INSERT INTO `languages` (`code`, `name`, `default`) VALUES
 	('ukr', 'українська', 'N');
 /*!40000 ALTER TABLE `languages` ENABLE KEYS */;
 
--- Dumping data for table lifetime.life_exp: ~561 rows (приблизно)
+-- Dumping data for table lifetime.life_exp: ~522 rows (приблизно)
 /*!40000 ALTER TABLE `life_exp` DISABLE KEYS */;
 INSERT INTO `life_exp` (`country_id`, `gender_id`, `life_exp`) VALUES
 	(32, 3, 50.6),
@@ -1365,15 +1365,15 @@ INSERT INTO `life_exp` (`country_id`, `gender_id`, `life_exp`) VALUES
 	(97, 2, 87.6);
 /*!40000 ALTER TABLE `life_exp` ENABLE KEYS */;
 
--- Dumping data for table lifetime.log: ~143 rows (приблизно)
+-- Dumping data for table lifetime.log: ~139 rows (приблизно)
 /*!40000 ALTER TABLE `log` DISABLE KEYS */;
 -- Historical request rows removed during the 2026-10-31 privacy audit.
 
 /*!40000 ALTER TABLE `log` ENABLE KEYS */;
 
--- Dumping data for table lifetime.translations: ~2 rows (приблизно)
+-- Dumping data for table lifetime.translations: ~17 rows (приблизно)
 /*!40000 ALTER TABLE `translations` DISABLE KEYS */;
-INSERT INTO `translations` (`code`, `lang`, `translate`) VALUES
+INSERT INTO `translations` (`code`, `lang`, `translation`) VALUES
 	('country', 'eng', 'country'),
 	('country', 'rus', 'страна'),
 	('country', 'ukr', 'країна'),
