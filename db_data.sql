@@ -799,7 +799,7 @@ INSERT INTO `languages` (`code`, `name`, `default`) VALUES
 	('ukr', 'українська', 'N');
 /*!40000 ALTER TABLE `languages` ENABLE KEYS */;
 
--- Dumping data for table lifetime.life_exp: ~561 rows (приблизно)
+-- Dumping data for table lifetime.life_exp: ~522 rows (приблизно)
 /*!40000 ALTER TABLE `life_exp` DISABLE KEYS */;
 INSERT INTO `life_exp` (`country_id`, `gender_id`, `life_exp`) VALUES
 	(32, 3, 50.6),
@@ -1365,7 +1365,7 @@ INSERT INTO `life_exp` (`country_id`, `gender_id`, `life_exp`) VALUES
 	(97, 2, 87.6);
 /*!40000 ALTER TABLE `life_exp` ENABLE KEYS */;
 
--- Dumping data for table lifetime.log: ~143 rows (приблизно)
+-- Dumping data for table lifetime.log: ~139 rows (приблизно)
 /*!40000 ALTER TABLE `log` DISABLE KEYS */;
 INSERT INTO `log` (`id`, `ip`, `url`, `method`, `date`) VALUES
 	(1, '66.151.211.170', 'robots.txt', 'HEAD', '2020-03-13 11:31:15'),
@@ -1510,12 +1510,15 @@ INSERT INTO `log` (`id`, `ip`, `url`, `method`, `date`) VALUES
 	(140, '5.101.0.209', 'index.php', 'GET', '2020-03-15 01:08:19'),
 	(141, '162.243.130.146', 'hudson', 'GET', '2020-03-15 14:03:32'),
 	(142, '193.202.44.194', 'robots.txt', 'HEAD', '2020-03-15 15:04:06'),
-	(143, '193.202.44.194', 'robots.txt', 'HEAD', '2020-03-15 17:33:04');
+	(143, '193.202.44.194', 'robots.txt', 'HEAD', '2020-03-15 17:33:04'),
+	(144, '193.202.44.194', 'robots.txt', 'HEAD', '2020-03-15 20:07:26'),
+	(145, '127.0.0.1', 'translations/country', 'GET', '2020-03-15 21:15:47'),
+	(146, '127.0.0.1', 'translations/country', 'GET', '2020-03-15 21:21:39');
 /*!40000 ALTER TABLE `log` ENABLE KEYS */;
 
--- Dumping data for table lifetime.translations: ~2 rows (приблизно)
+-- Dumping data for table lifetime.translations: ~17 rows (приблизно)
 /*!40000 ALTER TABLE `translations` DISABLE KEYS */;
-INSERT INTO `translations` (`code`, `lang`, `translate`) VALUES
+INSERT INTO `translations` (`code`, `lang`, `translation`) VALUES
 	('country', 'eng', 'country'),
 	('country', 'rus', 'страна'),
 	('country', 'ukr', 'країна'),
