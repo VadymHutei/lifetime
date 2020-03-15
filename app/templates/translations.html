@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}LifeItme - translations{% endblock %}
+
+{% block content %}
+<h1>Translations</h1>
+<table>
+    <thead>
+        <tr>
+            <th>code</th>
+            {% for language in languages: %}
+            <th>{{ language }}</th>
+            {% endfor %}
+            <th>actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for code, translate in translations.items(): %}
+        <tr>
+            <td>{{ code }}</td>
+            {% for language in languages: %}
+            <td>{{ translate[language] }}</td>
+            {% endfor %}
+            <td>
+                <p><a href="/translations/edit?admin_key={{ admin_key }}&code={{ code }}">edit</a></p>
+                <p><a href="/translations/delete?admin_key={{ admin_key }}&code={{ code }}">delete</a></p>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td><a href="/translations/add?admin_key={{ admin_key }}">add</a></td>
+            {% for language in languages: %}
+            <td></td>
+            {% endfor %}
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

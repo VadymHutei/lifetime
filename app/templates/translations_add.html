@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}LifeItme - add translate{% endblock %}
+
+{% block content %}
+<h1>Add translate</h1>
+<form action="/translations/add?admin_key={{ admin_key }}" method="post">
+    <fieldset>
+        <legend>code</legend>
+        <input type="text" name="code" autocomplete="off" required autofocus>
+    </fieldset>
+    {% for language in languages: %}
+    <fieldset>
+        <legend>{{ language }}</legend>
+        <input type="text" name="translate[{{ language }}]" placeholder="{{ language }}">
+    </fieldset>
+    {% endfor %}
+    <input type="submit">
+</form>
+{% endblock %}
