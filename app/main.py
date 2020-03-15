@@ -10,70 +10,13 @@ from flask import (
     url_for
 )
 from dateutil.relativedelta import relativedelta
-import pymysql
-from functools import wraps
 
 import config
 import data
+import lt_lib
+
 
 app = Flask(__name__)
-
-
-def getLanguages():
-    connection = pymysql.connect(
-        **config.db,
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    try:
-        with connection.cursor() as cursor:
-            query = """
-                SELECT
-                    `code`,
-                    `name`,
-                    `default`
-                FROM
-                    `languages`
-            """
-            cursor.execute(query)
-            result = cursor.fetchall()
-    finally:
-        connection.close()
-    languages = {}
-    default_language = None
-    for lang in result:
-        languages[lang['code']] = lang['name']
-        if lang['default'] == 'Y':
-            default_language = lang['code']
-    return languages, default_language
-
-def getTranlations():
-    connection = pymysql.connect(
-        **config.db,
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    try:
-        with connection.cursor() as cursor:
-            query = """
-                SELECT
-                    `code`,
-                    `lang`,
-                    `translate`
-                FROM
-                    `translations`
-            """
-            cursor.execute(query)
-            result = cursor.fetchall()
-    finally:
-        connection.close()
-    translations = {}
-    for t in result:
-        code = t['code']
-        lang = t['lang']
-        translate = t['translate']
-        if code not in translations:
-            translations[code] = {}
-        translations[code][lang] = translate
-    return translations
 
 def lang_redirect(f):
     @wraps(f)
@@ -173,34 +116,10 @@ def result(language=lang.default_language):
 @app.route('/<path:url>')
 @app.route('/<string:url>')
 def other(url=''):
-    connection = pymysql.connect(
-        **config.db,
-        cursorclass=pymysql.cursors.DictCursor
+    lt_lib.log(
+        request.remote_addr,
+        url,
+        request.method,
+        datetime.now()
     )
-    try:
-        with connection.cursor() as cursor:
-            query = """
-                INSERT
-                    INTO `log`
-                        (
-                            `ip`,
-                            `url`,
-                            `method`,
-                            `date`
-                        )
-                    VALUES
-                        (%s, %s, %s, %s)
-            """
-            cursor.execute(
-                query,
-                (
-                    request.remote_addr,
-                    url,
-                    request.method,
-                    datetime.now()
-                )
-            )
-        connection.commit()
-    finally:
-        connection.close()
     abort(400)
