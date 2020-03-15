@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}LifeTime - how long will you live{% endblock %}
+{% block title %}{{ translate('title_home') }}{% endblock %}
 
 {% block description %}Find out how much you have left to live{% endblock %}
 
@@ -33,39 +33,39 @@
 
 {% block content %}
 <h1>LifeTime</h1>
-<form action="/result" method="get">
+<form action="/{{ language }}/result" method="get">
     <fieldset>
-        <legend>Country</legend>
+        <legend>{{ translate('country').capitalize() }}</legend>
         <select name="country">
-            <option value="World" selected>World</option>
+            <option value="{{ world['id'] }}" selected>{{ world['name'] }}</option>
             <optgroup label="Regions">
-                {% for region in regions: %}
-                <option value="{{ region }}">{{ region }}</option>
+                {% for region_id in regions: %}
+                <option value="{{ region_id }}">{{ regions[region_id]['name'] }}</option>
                 {% endfor %}
             </optgroup>
             <optgroup label="Countries">
-                {% for country in countries: %}
-                <option value="{{ country }}">{{ country }}</option>
+                {% for country_id in countries: %}
+                <option value="{{ country_id }}">{{ countries[country_id]['name'] }}</option>
                 {% endfor %}
             </optgroup>
         </select>
     </fieldset>
     <fieldset>
-        <legend>Date of birth</legend>
+        <legend>{{ translate('date of birth').capitalize() }}</legend>
         <input type="date" name="birth_date" required>
     </fieldset>
     <fieldset>
-        <legend>Sex</legend>
-        <input type="radio" name="sex" value="o" hidden checked>
+        <legend>{{ translate('sex').capitalize() }}</legend>
+        <input type="radio" name="sex" value="1" hidden checked>
         <label>
-            <input type="radio" name="sex" value="m">
-            {{ sex['m'][0] }}
+            <input type="radio" name="sex" value="2">
+            {{ genders[2][language]['name'] }}
         </label>
         <label>
-            <input type="radio" name="sex" value="f">
-            {{ sex['f'][0] }}
+            <input type="radio" name="sex" value="3">
+            {{ genders[3][language]['name'] }}
         </label>
     </fieldset>
-    <input type="submit">
+    <input type="submit" value="{{ translate('submit').capitalize() }}">
 </form>
 {% endblock %}
