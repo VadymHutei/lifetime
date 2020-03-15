@@ -16,6 +16,19 @@
 CREATE DATABASE IF NOT EXISTS `lifetime` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 USE `lifetime`;
 
+-- Dumping structure for таблиця lifetime.countries
+CREATE TABLE IF NOT EXISTS `countries` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `overall` float NOT NULL,
+  `female` float NOT NULL,
+  `male` float NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Дані для експорту не вибрані
+
 -- Dumping structure for таблиця lifetime.languages
 CREATE TABLE IF NOT EXISTS `languages` (
   `code` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -35,7 +48,20 @@ CREATE TABLE IF NOT EXISTS `log` (
   `date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ip` (`ip`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Дані для експорту не вибрані
+
+-- Dumping structure for таблиця lifetime.regions
+CREATE TABLE IF NOT EXISTS `regions` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `overall` float unsigned NOT NULL,
+  `female` float unsigned NOT NULL,
+  `male` float unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Дані для експорту не вибрані
 
