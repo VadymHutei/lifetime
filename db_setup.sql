@@ -19,7 +19,7 @@ USE `lifetime`;
 -- Dumping structure for таблиця lifetime.countries
 CREATE TABLE IF NOT EXISTS `countries` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` enum('country','region') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` enum('country','region','world') COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=188 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
