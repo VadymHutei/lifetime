@@ -58,6 +58,7 @@ def translations_add():
     admin_key = request.args.get('admin_key')
     if admin_key != config.admin_key:
         abort(400)
+    global translations
     if request.method == 'GET':
         params = {
             'admin_key': admin_key,
@@ -74,6 +75,7 @@ def translations_add():
                     continue
                 translations[language] = translation
         lt_lib.setTranslations(code, translations)
+        translations = lt_lib.getTranlations()
         return redirect(url_for('translations_page', admin_key=config.admin_key))
 
 @app.route('/translations/edit', methods=['GET', 'POST'])
@@ -165,6 +167,7 @@ def result(language=default_language):
     life_left = relativedelta(death_date, today_date)
 
     params = {
+        'translate': lt_lib.getTranslator(translations, language),
         'life_left': life_left,
         'today_date': today_date.strftime('%d %b %Y'),
         'birth_date': birth_date.strftime('%d %b %Y'),
