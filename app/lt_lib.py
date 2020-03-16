@@ -59,7 +59,7 @@ def getTranlations():
         translations[code][lang] = translation
     return translations
 
-def getLifeExp():
+def getCountries():
     connection = pymysql.connect(
         **config.db,
         cursorclass=pymysql.cursors.DictCursor
@@ -83,38 +83,16 @@ def getLifeExp():
             result = cursor.fetchall()
     finally:
         connection.close()
-    world = None
-    regions = {}
     countries = {}
-    life_exp_data = {}
     for row in result:
-        if row['id'] == 181:
-            if world is None:
-                world = {
-                    'id': row['id'],
-                    'type': row['type'],
-                    'name': {},
-                    'life_exp': {}
-                }
-            world['name'][row['lang']] = row['name']
-        elif row['type'] == 'region':
-            if row['id'] not in regions:
-                regions[row['id']] = {
-                    'id': row['id'],
-                    'type': row['type'],
-                    'name': {},
-                    'life_exp': {}
-                }
-            regions[row['id']]['name'][row['lang']] = row['name']
-        elif row['type'] == 'country':
-            if row['id'] not in countries:
-                countries[row['id']] = {
-                    'id': row['id'],
-                    'type': row['type'],
-                    'name': {},
-                    'life_exp': {}
-                }
-            countries[row['id']]['name'][row['lang']] = row['name']
+        if row['id'] not in countries:
+            countries[row['id']] = {
+                'id': row['id'],
+                'type': row['type'],
+                'name': {},
+                'life_exp': {}
+            }
+        countries[row['id']]['name'][row['lang']] = row['name']
     connection = pymysql.connect(
         **config.db,
         cursorclass=pymysql.cursors.DictCursor
@@ -139,16 +117,8 @@ def getLifeExp():
     finally:
         connection.close()
     for row in result:
-        if row['id'] not in life_exp_data:
-            life_exp_data[row['id']] = {}
-        life_exp_data[row['id']][row['gender_id']] = row['life_exp']
-        if row['id'] == 181:
-            world['life_exp'][row['gender_id']] = row['life_exp']
-        elif row['type'] == 'region':
-            regions[row['id']]['life_exp'][row['gender_id']] = row['life_exp']
-        elif row['type'] == 'country':
-            countries[row['id']]['life_exp'][row['gender_id']] = row['life_exp']
-    return world, regions, countries, life_exp_data
+        countries[row['id']]['life_exp'][row['gender_id']] = row['life_exp']
+    return countries
 
 def getGenders():
     connection = pymysql.connect(
