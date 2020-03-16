@@ -39,13 +39,17 @@
         <select name="country">
             <option value="{{ world['id'] }}" selected>{{ world['name'][language] }}</option>
             <optgroup label="Regions">
-                {% for region_id in regions: %}
-                <option value="{{ region_id }}">{{ regions[region_id]['name'][language] }}</option>
+                {% for country_id, country in countries.items(): %}
+                {% if country['type'] == 'region': %}
+                <option value="{{ country_id }}">{{ country['name'][language] }}</option>
+                {% endif %}
                 {% endfor %}
             </optgroup>
             <optgroup label="Countries">
-                {% for country_id in countries: %}
-                <option value="{{ country_id }}">{{ countries[country_id]['name'][language] }}</option>
+                {% for country_id, country in countries.items(): %}
+                {% if country['type'] == 'country': %}
+                <option value="{{ country_id }}">{{ country['name'][language] }}</option>
+                {% endif %}
                 {% endfor %}
             </optgroup>
         </select>

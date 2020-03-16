@@ -24,7 +24,7 @@ app = Flask(__name__)
 
 languages, default_language = lt_lib.getLanguages()
 translations = lt_lib.getTranlations()
-world, regions, countries, life_exp_data = lt_lib.getLifeExp()
+countries = lt_lib.getCountries()
 genders = lt_lib.getGenders()
 
 
@@ -126,8 +126,7 @@ def main(language=default_language):
         'language': language,
         'translations': {t: v.get(language) for t, v in translations.items()},
         'countries': countries,
-        'regions': regions,
-        'world': world,
+        'world': countries[181],
         'genders': genders
     }
     return render_template('main.html', **params)
@@ -147,9 +146,10 @@ def result(language=default_language):
         abort(400)
 
     country_id = int(request.args.get('country', '181'))
-    if country_id not in life_exp_data:
+    if country_id not in countries:
         abort(400)
-    life_exp = life_exp_data.get(country_id)
+    country = countries.get(country_id)['name'][language]
+    life_exp = countries.get(country_id)['life_exp']
 
     life_length_years = math.trunc(life_exp[gender])
     life_length_months = round(12 * math.modf(life_exp[gender])[0])
@@ -168,7 +168,6 @@ def result(language=default_language):
 
     params = {
         'translate': lt_lib.getTranslator(translations, language),
-        'life_left': life_left,
         'today_date': today_date.strftime('%d %b %Y'),
         'birth_date': birth_date.strftime('%d %b %Y'),
         'life_length': {
@@ -182,7 +181,7 @@ def result(language=default_language):
             'days': life_left.days
         },
         'sex': genders[gender][language]['name'],
-        'country': country_id,
+        'country': country,
         'lived': {
             'years': abs(lived.years),
             'months': abs(lived.months)
