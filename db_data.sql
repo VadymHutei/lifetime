@@ -194,7 +194,7 @@ INSERT INTO `countries` (`id`, `type`) VALUES
 	(178, 'country'),
 	(179, 'country'),
 	(180, 'country'),
-	(181, 'region'),
+	(181, 'world'),
 	(182, 'region'),
 	(183, 'region'),
 	(184, 'region'),
@@ -769,7 +769,7 @@ INSERT INTO `countries_text` (`country_id`, `lang`, `name`) VALUES
 	(187, 'ukr', 'Африка на південь від Сахари');
 /*!40000 ALTER TABLE `countries_text` ENABLE KEYS */;
 
--- Dumping data for table lifetime.genders: ~2 rows (приблизно)
+-- Dumping data for table lifetime.genders: ~3 rows (приблизно)
 /*!40000 ALTER TABLE `genders` DISABLE KEYS */;
 INSERT INTO `genders` (`id`) VALUES
 	(1),
@@ -791,7 +791,7 @@ INSERT INTO `genders_text` (`gender_id`, `lang`, `name`) VALUES
 	(3, 'ukr', 'чоловіча');
 /*!40000 ALTER TABLE `genders_text` ENABLE KEYS */;
 
--- Dumping data for table lifetime.languages: ~2 rows (приблизно)
+-- Dumping data for table lifetime.languages: ~3 rows (приблизно)
 /*!40000 ALTER TABLE `languages` DISABLE KEYS */;
 INSERT INTO `languages` (`code`, `name`, `default`) VALUES
 	('eng', 'english', 'Y'),
@@ -799,7 +799,7 @@ INSERT INTO `languages` (`code`, `name`, `default`) VALUES
 	('ukr', 'українська', 'N');
 /*!40000 ALTER TABLE `languages` ENABLE KEYS */;
 
--- Dumping data for table lifetime.life_exp: ~522 rows (приблизно)
+-- Dumping data for table lifetime.life_exp: ~561 rows (приблизно)
 /*!40000 ALTER TABLE `life_exp` DISABLE KEYS */;
 INSERT INTO `life_exp` (`country_id`, `gender_id`, `life_exp`) VALUES
 	(32, 3, 50.6),
@@ -1365,7 +1365,7 @@ INSERT INTO `life_exp` (`country_id`, `gender_id`, `life_exp`) VALUES
 	(97, 2, 87.6);
 /*!40000 ALTER TABLE `life_exp` ENABLE KEYS */;
 
--- Dumping data for table lifetime.log: ~142 rows (приблизно)
+-- Dumping data for table lifetime.log: ~150 rows (приблизно)
 /*!40000 ALTER TABLE `log` DISABLE KEYS */;
 INSERT INTO `log` (`id`, `ip`, `url`, `method`, `date`) VALUES
 	(1, '66.151.211.170', 'robots.txt', 'HEAD', '2020-03-13 11:31:15'),
