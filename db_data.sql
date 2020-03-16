@@ -1365,24 +1365,54 @@ INSERT INTO `life_exp` (`country_id`, `gender_id`, `life_exp`) VALUES
 	(97, 2, 87.6);
 /*!40000 ALTER TABLE `life_exp` ENABLE KEYS */;
 
--- Dumping data for table lifetime.log: ~139 rows (приблизно)
+-- Dumping data for table lifetime.log: ~142 rows (приблизно)
 /*!40000 ALTER TABLE `log` DISABLE KEYS */;
 -- Historical request rows removed during the 2026-10-31 privacy audit.
 
 /*!40000 ALTER TABLE `log` ENABLE KEYS */;
 
--- Dumping data for table lifetime.translations: ~17 rows (приблизно)
+-- Dumping data for table lifetime.translations: ~57 rows (приблизно)
 /*!40000 ALTER TABLE `translations` DISABLE KEYS */;
 INSERT INTO `translations` (`code`, `lang`, `translation`) VALUES
+	('already lived', 'eng', 'already lived'),
+	('already lived', 'rus', 'уже прожито'),
+	('already lived', 'ukr', 'вже прожито'),
 	('country', 'eng', 'country'),
 	('country', 'rus', 'страна'),
 	('country', 'ukr', 'країна'),
 	('date of birth', 'eng', 'date of birth'),
 	('date of birth', 'rus', 'дата рождения'),
 	('date of birth', 'ukr', 'дата народження'),
+	('days', 'eng', 'days'),
+	('days', 'rus', 'дней'),
+	('days', 'ukr', 'днів'),
+	('descriptioin_result', 'eng', 'Your results'),
+	('descriptioin_result', 'rus', 'Ваши результаты'),
+	('descriptioin_result', 'ukr', 'Ваші результати'),
 	('description_home', 'eng', 'Find out how much you have left to live'),
 	('description_home', 'rus', 'Узнать сколько осталось жить'),
 	('description_home', 'ukr', 'Дізнатися скільки залишилося жити'),
+	('estimated life expectancy', 'eng', 'estimated life expectancy'),
+	('estimated life expectancy', 'rus', 'предполагаемая продолжительность жизни'),
+	('estimated life expectancy', 'ukr', 'орієнтовна тривалість життя'),
+	('expected date of death', 'eng', 'expected date of death'),
+	('expected date of death', 'rus', 'ожидаемая дата смерти'),
+	('expected date of death', 'ukr', 'очікувана дата смерті'),
+	('home_page', 'eng', 'home page'),
+	('home_page', 'rus', 'домашняя страница'),
+	('home_page', 'ukr', 'домашня сторінка'),
+	('initial data', 'eng', 'initial data'),
+	('initial data', 'rus', 'исходные данные'),
+	('initial data', 'ukr', 'початкові дані'),
+	('left to live', 'eng', 'left to live'),
+	('left to live', 'rus', 'осталось жить'),
+	('left to live', 'ukr', 'залишилось жити'),
+	('months', 'eng', 'months'),
+	('months', 'rus', 'месяцев'),
+	('months', 'ukr', 'місяців'),
+	('page_title_result', 'eng', 'Your results'),
+	('page_title_result', 'rus', 'Ваши результаты'),
+	('page_title_result', 'ukr', 'Ваші результати'),
 	('sex', 'eng', 'sex'),
 	('sex', 'rus', 'пол'),
 	('sex', 'ukr', 'стать'),
@@ -1391,7 +1421,16 @@ INSERT INTO `translations` (`code`, `lang`, `translation`) VALUES
 	('submit', 'ukr', 'надіслати'),
 	('title_home', 'eng', 'LifeTime - how long will you live'),
 	('title_home', 'rus', 'LifeTime - сколько вам осталось жить'),
-	('title_home', 'ukr', 'LifeTime - скільки вам залишилось жити');
+	('title_home', 'ukr', 'LifeTime - скільки вам залишилось жити'),
+	('title_result', 'eng', 'LifeTime - result'),
+	('title_result', 'rus', 'LifeTime - результаты'),
+	('title_result', 'ukr', 'LifeTime - результати'),
+	('today', 'eng', 'today'),
+	('today', 'rus', 'сегодня'),
+	('today', 'ukr', 'сьогодні'),
+	('years', 'eng', 'years'),
+	('years', 'rus', 'лет'),
+	('years', 'ukr', 'років');
 /*!40000 ALTER TABLE `translations` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
