@@ -23,9 +23,15 @@ def foo():
 
 app = Flask(__name__)
 
+# languages, translations
 languages, default_language = lt_lib.getLanguages()
 translations = lt_lib.getTranlations()
+
+# countries
 countries = lt_lib.getCountries()
+country_aliases = {country['alias']: country['id'] for _, country in countries.items()}
+
+# genders
 genders = lt_lib.getGenders()
 
 
@@ -35,9 +41,11 @@ def lang_redirect(f):
         language = kwargs.get('language', False)
         if language:
             if language not in languages:
-                return redirect(url_for(f.__name__, **request.args))
-            if language == default_language:
-                return redirect(url_for(f.__name__, **request.args))
+                return redirect(url_for(
+                    f.__name__,
+                    language=default_language,
+                    **request.args
+                ))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -119,7 +127,11 @@ def translations_delete():
     return redirect(url_for('translations_page', admin_key=config.admin_key))
 
 @app.route('/', methods=['GET'])
-@app.route('/<language>', methods=['GET'])
+def root():
+    return redirect(url_for('main', language=default_language, **request.args))
+
+
+@app.route('/<string:language>', methods=['GET'])
 @lang_redirect
 def main(language=default_language):
     params = {
@@ -133,8 +145,7 @@ def main(language=default_language):
     return render_template('main.html', **params)
 
 
-@app.route('/result', methods=['GET'])
-@app.route('/<language>/result', methods=['GET'])
+@app.route('/<string:language>/result', methods=['GET'])
 @lang_redirect
 def result(language=default_language):
     birth_date = request.args.get('birth_date')
@@ -191,10 +202,38 @@ def result(language=default_language):
 
     return render_template('result.html', **params)
 
+
+@app.route('/<string:language>/<string:alias>', methods=['GET'])
+@lang_redirect
+def main_country(alias, language=default_language):
+    if alias in country_aliases:
+        country_id = country_aliases[alias]
+        country = countries.get(country_id)
+        if country is None:
+            abort(404)
+        params = {
+            'translate': lt_lib.getTranslator(translations, language),
+            'language': language,
+            'translations': {t: v.get(language) for t, v in translations.items()},
+            'country': country,
+            'genders': genders
+        }
+        return render_template('country.html', **params)
+    else:
+        lt_lib.log(
+            request.remote_addr,
+            country,
+            request.method,
+            datetime.now()
+        )
+        abort(400)
+
+
 @app.route('/robots.txt')
 @app.route('/sitemap.xml')
 def static_from_root():
     return send_from_directory('static', request.path[1:])
+
 
 @app.route('/<path:url>')
 @app.route('/<string:url>')
