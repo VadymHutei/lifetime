@@ -70,6 +70,7 @@ def getCountries():
                 SELECT
                     `c`.`id`,
                     `c`.`type`,
+                    `c`.`alias`,
                     `ct`.`lang`,
                     `ct`.`name`
                 FROM
@@ -89,6 +90,7 @@ def getCountries():
             countries[row['id']] = {
                 'id': row['id'],
                 'type': row['type'],
+                'alias': row['alias'],
                 'name': {},
                 'life_exp': {}
             }
@@ -102,7 +104,6 @@ def getCountries():
             query = """
                 SELECT
                     `c`.`id`,
-                    `c`.`type`,
                     `l`.`gender_id`,
                     `l`.`life_exp`
                 FROM
@@ -119,6 +120,18 @@ def getCountries():
     for row in result:
         countries[row['id']]['life_exp'][row['gender_id']] = row['life_exp']
     return countries
+
+def getCountryAlias(name):
+    allowed_chars_range = []
+    digits_range = range(ord('0'), ord('9') + 1)
+    letters_range = range(ord('a'), ord('z') + 1)
+    allowed_chars_range += list(digits_range)
+    allowed_chars_range += list(letters_range)
+    allowed_chars_range.append(ord('-'))
+    allowed_chars_range.append(ord('_'))
+    allowed_chars = [chr(x) for x in allowed_chars_range]
+    l_name = list(name.lower().replace(' ', '-'))
+    return ''.join(filter(lambda x: x in allowed_chars, l_name)).strip('-_')
 
 def getGenders():
     connection = pymysql.connect(
