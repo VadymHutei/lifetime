@@ -8,7 +8,8 @@ from flask import (
     request,
     abort,
     redirect,
-    url_for
+    url_for,
+    send_from_directory
 )
 from dateutil.relativedelta import relativedelta
 
@@ -189,6 +190,11 @@ def result(language=default_language):
     }
 
     return render_template('result.html', **params)
+
+@app.route('/robots.txt')
+@app.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory('static', request.path[1:])
 
 @app.route('/<path:url>')
 @app.route('/<string:url>')
