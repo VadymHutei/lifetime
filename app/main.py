@@ -42,7 +42,7 @@ def lang_redirect(f):
         if language:
             if language not in languages:
                 return redirect(url_for(
-                    f.__name__,
+                    'main',
                     language=default_language,
                     **request.args
                 ))
@@ -61,6 +61,7 @@ def translations_page():
         'translations': translations
     }
     return render_template('translations.html', **params)
+
 
 @app.route('/translations/add', methods=['GET', 'POST'])
 def translations_add():
@@ -86,6 +87,7 @@ def translations_add():
         lt_lib.setTranslations(code, translations)
         translations = lt_lib.getTranlations()
         return redirect(url_for('translations_page', admin_key=config.admin_key))
+
 
 @app.route('/translations/edit', methods=['GET', 'POST'])
 def translations_edit():
@@ -115,6 +117,7 @@ def translations_edit():
         translations = lt_lib.getTranlations()
         return redirect(url_for('translations_page', admin_key=config.admin_key))
 
+
 @app.route('/translations/delete', methods=['GET'])
 def translations_delete():
     admin_key = request.args.get('admin_key')
@@ -125,6 +128,7 @@ def translations_delete():
     global translations
     translations = lt_lib.getTranlations()
     return redirect(url_for('translations_page', admin_key=config.admin_key))
+
 
 @app.route('/', methods=['GET'])
 def root():
@@ -222,11 +226,11 @@ def main_country(alias, language=default_language):
     else:
         lt_lib.log(
             request.remote_addr,
-            country,
+            f'/{language}/{alias}',
             request.method,
             datetime.now()
         )
-        abort(400)
+        abort(404)
 
 
 @app.route('/robots.txt')
@@ -244,4 +248,4 @@ def other(url=''):
         request.method,
         datetime.now()
     )
-    abort(400)
+    abort(404)
