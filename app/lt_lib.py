@@ -1,7 +1,118 @@
+import math
+
 import pymysql
 
 import config
 
+def getDateFormator(language=None):
+    def dateFormate(**kwargs):
+        if language is None:
+            raise Exception('language is required')
+
+        def getRule(language, type_):
+            words = {
+                'eng': {
+                    'years': ('year', 'years', 'years'),
+                    'months': ('month', 'months', 'months'),
+                    'days': ('day', 'days', 'days'),
+                },
+                'rus': {
+                    'years': ('год', 'года', 'лет'),
+                    'months': ('месяц', 'месяца', 'месяцев'),
+                    'days': ('день', 'дня', 'дней'),
+                },
+                'ukr': {
+                    'years': ('рік', 'роки', 'років'),
+                    'months': ('місяців', 'місяць', 'місяці'),
+                    'days': ('день', 'дні', 'днів'),
+                }
+            }
+            word = words[language][type_]
+            def rule(items):
+                if items in tuple(range(11, 15)):
+                    return word[2]
+                elif items % 10 == 1:
+                    return word[0]
+                elif items % 10 in tuple(range(2, 5)):
+                    return word[1]
+                else:
+                    return word[2]
+            return rule
+
+        all_rules = {
+            'eng': {
+                'years': getRule('eng', 'years'),
+                'months': getRule('eng', 'months'),
+                'days': getRule('eng', 'days')
+            },
+            'rus': {
+                'years': getRule('rus', 'years'),
+                'months': getRule('rus', 'months'),
+                'days': getRule('rus', 'days')
+            },
+            'ukr': {
+                'years': getRule('ukr', 'years'),
+                'months': getRule('ukr', 'months'),
+                'days': getRule('ukr', 'days')
+            }
+        }
+        all_rules['default'] = all_rules['eng']
+        rules = all_rules[language] if language in all_rules else all_rules['default']
+        result = []
+        for item, rule in rules.items():
+            value = kwargs.get(item)
+            if value is None or value == 0:
+                continue
+            if not isinstance(value, int):
+                raise Exception(f'wrong type of "{item}" parameter')
+            result.append(f'{value} {rule(value)}')
+        return ' '.join(result)
+    return dateFormate
+
+def decomposeDate(**kwargs):
+    months_in_year = 12
+    days_in_month = 31
+
+    years = 0
+    months = 0
+    days = 0
+
+    years_raw = kwargs.get('years')
+    if years_raw:
+        if isinstance(years_raw, int):
+            years += years_raw
+        if isinstance(years_raw, float):
+            years += math.trunc(years_raw)
+            months += round(months_in_year * math.modf(years_raw)[0])
+
+    months_raw = kwargs.get('months')
+    if months_raw:
+        if isinstance(months_raw, int):
+            months += months_raw
+        if isinstance(months_raw, float):
+            months += math.trunc(years_raw)
+            days += round(days_in_month * math.modf(months_raw)[0])
+
+    days_raw = kwargs.get('days')
+    if days_raw:
+        if isinstance(days_raw, int):
+            days += days_raw
+        if isinstance(days_raw, float):
+            days += math.trunc(years_raw)
+
+    if kwargs.get('normalize', False):
+        if days > days_in_month:
+            months += days // days_in_month
+            days = days % days_in_month
+        if months > months_in_year:
+            years += months // months_in_year
+            months = months % months_in_year
+
+    return {
+        'years': years,
+        'months': months,
+        'days': days
+    }
 
 def getLanguages():
     connection = pymysql.connect(
