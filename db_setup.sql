@@ -2,7 +2,7 @@
 -- Сервер:                       lifetime.hutei.net
 -- Версія сервера:               5.7.29 - MySQL Community Server (GPL)
 -- ОС сервера:                   Linux
--- HeidiSQL Версія:              10.3.0.5771
+-- HeidiSQL Версія:              11.0.0.5919
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS `countries` (
 CREATE TABLE IF NOT EXISTS `countries_text` (
   `country_id` int(10) unsigned NOT NULL,
   `lang` char(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `locative` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`country_id`,`lang`),
   KEY `FK_countries_text_languages` (`lang`),
   CONSTRAINT `FK_countries_text_countries` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -94,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `log` (
   `date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ip` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=328 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Дані для експорту не вибрані
 
