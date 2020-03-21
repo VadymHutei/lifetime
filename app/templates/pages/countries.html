@@ -1,0 +1,73 @@
+{% extends "layout/layout.html" %}
+
+
+{% block title -%}
+
+{{ translate('title_countries') }}
+
+{%- endblock %}
+
+
+{% block description -%}
+
+{{ translate('description_countries') }}
+
+{%- endblock %}
+
+
+{% block opengraph -%}
+
+<meta name="og:title" content="{{ translate('title_countries') }}">
+<meta name="og:description" content="{{ translate('description_countries') }}">
+<meta name="og:url" content="{{ site_addr }}/{{ language }}/countries">
+<meta name="og:site_name" content="LifeTime">
+<meta name="og:type" content="website">
+
+{%- endblock %}
+
+{% block schemaorg -%}
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "WebSite",
+        "name": "LifeTime",
+        "url": "{{ site_addr }}/{{ language }}",
+        "copyrightYear": 2020,
+        "creator": {
+            "@type": "Person",
+            "name": "Vadym Hutei",
+            "url": "",
+            "image": "",
+            "sameAs": "https://github.com/VadymHutei"  
+        }
+    }
+</script>
+
+{%- endblock %}
+
+{% block content -%}
+
+<section>
+    <h1>{{ translate('list of countries').capitalize() }}</h1>
+    <h2>{{ translate('world and regions').capitalize() }}</h2>
+    {% for _, country in countries.items() %}
+    {% if country['type'] == 'world': %}
+    <p><a href="{{ site_addr }}/{{ language }}/{{ country['alias'] }}">{{ country['name'][language] }}</a></p>
+    {% endif %}
+    {% endfor %}
+    {% for _, country in countries.items() %}
+    {% if country['type'] == 'region': %}
+    <p><a href="{{ site_addr }}/{{ language }}/{{ country['alias'] }}">{{ country['name'][language] }}</a></p>
+    {% endif %}
+    {% endfor %}
+    <br>
+    <h2>{{ translate('countries').capitalize() }}</h2>
+    {% for _, country in countries.items() %}
+    {% if country['type'] == 'country': %}
+    <p><a href="{{ site_addr }}/{{ language }}/{{ country['alias'] }}">{{ country['name'][language] }}</a></p>
+    {% endif %}
+    {% endfor %}
+</section>
+
+{%- endblock %}
