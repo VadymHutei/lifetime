@@ -18,6 +18,12 @@ for language in languages:
     body += f'<lastmod>{cur_date}</lastmod>'
     body += '<changefreq>monthly</changefreq>'
     body += '</url>'
+    body += '<url>'
+    body += f'<loc>http://lifetime.hutei.net/{language}/countries</loc>'
+    body += '<priority>1</priority>'
+    body += f'<lastmod>{cur_date}</lastmod>'
+    body += '<changefreq>monthly</changefreq>'
+    body += '</url>'
     for country in countries.values():
         body += '<url>'
         body += f'<loc>http://lifetime.hutei.net/{language}/{country["alias"]}</loc>'
