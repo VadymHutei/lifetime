@@ -1,0 +1,79 @@
+{% extends "layout/layout.html" %}
+
+
+{% block title -%}
+
+{{ translate('title_home') }}
+
+{%- endblock %}
+
+
+{% block description -%}
+
+{{ translate('description_home') }}
+
+{%- endblock %}
+
+
+{% block opengraph -%}
+
+<meta name="og:title" content="{{ translate('title_home') }}">
+<meta name="og:description" content="{{ translate('description_home') }}">
+<meta name="og:url" content="{{ site_addr }}/{{ language }}">
+<meta name="og:site_name" content="LifeTime">
+<meta name="og:type" content="website">
+
+{%- endblock %}
+
+{% block schemaorg -%}
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "WebSite",
+        "name": "LifeTime",
+        "url": "{{ site_addr }}/{{ language }}",
+        "copyrightYear": 2020,
+        "creator": {
+            "@type": "Person",
+            "name": "Vadym Hutei",
+            "url": "",
+            "image": "",
+            "sameAs": "https://github.com/VadymHutei"  
+        }
+    }
+</script>
+
+{%- endblock %}
+
+{% block content -%}
+
+<section>
+    {% set text_template = 'pages/home/text_' + language + '.html' %}
+    {% include text_template ignore missing with context %}
+</section>
+
+<section>
+    <form action="/{{ language }}/result" method="get">
+        <input type="hidden" name="country" value="{{ world['id'] }}">
+        <fieldset>
+            <legend>{{ translate('date of birth').capitalize() }}</legend>
+            <input type="date" name="birth_date" required>
+        </fieldset>
+        <fieldset>
+            <legend>{{ translate('sex').capitalize() }}</legend>
+            <input type="radio" name="sex" value="1" hidden checked>
+            <label>
+                <input type="radio" name="sex" value="2">
+                {{ genders[2][language]['name'] }}
+            </label>
+            <label>
+                <input type="radio" name="sex" value="3">
+                {{ genders[3][language]['name'] }}
+            </label>
+        </fieldset>
+        <input type="submit" value="{{ translate('submit').capitalize() }}">
+    </form>
+</section>
+
+{%- endblock %}
