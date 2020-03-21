@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        {% include 'gtag.html' %}
-        {% include 'adsense.html' %}
+        {% include 'layout/gtag.html' ignore missing without context %}
+        {% include 'layout/adsense.html' ignore missing without context %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="{% block description %}{% endblock %}"> 
@@ -16,14 +16,10 @@
         <link rel="stylesheet" type="text/css" href="/static/css/main.css">
     </head>
     <body>
+        {% include "layout/header.html" ignore missing with context %}
         <main>
             {% block content %}{% endblock %}
         </main>
-        <footer>
-            <div class="copyright_block">
-                <p><a href="https://github.com/VadymHutei/lifetime"><img class="github_link" src="/static/img/github_64x62.png" alt="GitHub" title="GitHub"></a></p>
-                <p><span class="copyright_text">&copy; 2020 <a href="mailto:hutei@live.com">Vadym Hutei</a></span></p>
-            </div>
-        </footer>
+        {% include "layout/footer.html" ignore missing without context %}
     </body>
 </html>
