@@ -23,7 +23,7 @@ def getDateFormator(language=None):
                 },
                 'ukr': {
                     'years': ('рік', 'роки', 'років'),
-                    'months': ('місяців', 'місяць', 'місяці'),
+                    'months': ('місяць', 'місяці', 'місяців'),
                     'days': ('день', 'дні', 'днів'),
                 }
             }
@@ -183,13 +183,15 @@ def getCountries():
                     `c`.`type`,
                     `c`.`alias`,
                     `ct`.`lang`,
-                    `ct`.`name`
+                    `ct`.`name`,
+                    `ct`.`locative`
                 FROM
                     `countries` AS `c`
                 INNER JOIN
                     `countries_text` AS `ct`
                     ON
                         `ct`.`country_id` = `c`.`id`
+                ORDER BY `ct`.`name` ASC
             """
             cursor.execute(query)
             result = cursor.fetchall()
@@ -203,9 +205,11 @@ def getCountries():
                 'type': row['type'],
                 'alias': row['alias'],
                 'name': {},
+                'locative': {},
                 'life_exp': {}
             }
         countries[row['id']]['name'][row['lang']] = row['name']
+        countries[row['id']]['locative'][row['lang']] = row['locative']
     connection = pymysql.connect(
         **config.db,
         cursorclass=pymysql.cursors.DictCursor
