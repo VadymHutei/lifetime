@@ -65,6 +65,57 @@ def home(language=default_language):
     return render_template('pages/home.html', **params)
 
 
+@app.route('/<string:language>/countries', methods=['GET'])
+@lang_redirect
+def countries_page(language=default_language):
+    params = {
+        'site_addr': f'{request.scheme}://{request.host}',
+        'languages': languages,
+        'language': language,
+        'translations': {t: v.get(language) for t, v in translations.items()},
+        'countries': countries,
+        'life_exp': lt_lib.decomposeDate(years=world['life_exp'][1]),
+        'genders': genders
+    }
+    params.update({
+        'translate': lt_lib.getTranslator(translations, language),
+        'dateFormate': lt_lib.getDateFormator(language=language)
+    })
+    return render_template('pages/countries.html', **params)
+
+
+@app.route('/<string:language>/<string:alias>', methods=['GET'])
+@lang_redirect
+def main_country(alias, language=default_language):
+    if alias in country_aliases:
+        country_id = country_aliases[alias]
+        country = countries.get(country_id)
+        if country is None:
+            abort(404)
+        params = {
+            'site_addr': f'{request.scheme}://{request.host}',
+            'languages': languages,
+            'language': language,
+            'translations': {t: v.get(language) for t, v in translations.items()},
+            'country': country,
+            'life_exp': lt_lib.decomposeDate(years=country['life_exp'][1]),
+            'genders': genders
+        }
+        params.update({
+            'translate': lt_lib.getTranslator(translations, language),
+            'dateFormate': lt_lib.getDateFormator(language=language)
+        })
+        return render_template('pages/country.html', **params)
+    else:
+        lt_lib.log(
+            request.remote_addr,
+            f'/{language}/{alias}',
+            request.method,
+            datetime.now()
+        )
+        abort(404)
+
+
 @app.route('/<string:language>/result', methods=['GET'])
 @lang_redirect
 def result(language=default_language):
@@ -125,32 +176,6 @@ def result(language=default_language):
     return render_template('pages/result.html', **params)
 
 
-@app.route('/<string:language>/<string:alias>', methods=['GET'])
-@lang_redirect
-def main_country(alias, language=default_language):
-    if alias in country_aliases:
-        country_id = country_aliases[alias]
-        country = countries.get(country_id)
-        if country is None:
-            abort(404)
-        params = {
-            'translate': lt_lib.getTranslator(translations, language),
-            'language': language,
-            'translations': {t: v.get(language) for t, v in translations.items()},
-            'country': country,
-            'genders': genders
-        }
-        return render_template('country.html', **params)
-    else:
-        lt_lib.log(
-            request.remote_addr,
-            f'/{language}/{alias}',
-            request.method,
-            datetime.now()
-        )
-        abort(404)
-
-
 @app.route('/translations', methods=['GET'])
 def translations_page():
     admin_key = request.args.get('admin_key')
@@ -161,7 +186,7 @@ def translations_page():
         'languages': languages,
         'translations': translations
     }
-    return render_template('translations.html', **params)
+    return render_template('pages/translations.html', **params)
 
 
 @app.route('/translations/add', methods=['GET', 'POST'])
@@ -175,7 +200,7 @@ def translations_add():
             'admin_key': admin_key,
             'languages': languages
         }
-        return render_template('translations_add.html', **params)
+        return render_template('pages/translations_add.html', **params)
     if request.method == 'POST':
         code = request.form['code']
         translations = {}
@@ -204,7 +229,7 @@ def translations_edit():
             'code': code,
             'translations': translations[code]
         }
-        return render_template('translations_edit.html', **params)
+        return render_template('pages/translations_edit.html', **params)
     if request.method == 'POST':
         code = request.form['code']
         trans = {}
