@@ -132,7 +132,7 @@ def result(language=default_language):
     country_id = int(request.args.get('country', '181'))
     if country_id not in countries:
         abort(400)
-    country = countries.get(country_id)['name'][language]
+    country = countries.get(country_id)
     life_exp = countries.get(country_id)['life_exp']
 
     life_length_years = math.trunc(life_exp[gender])
@@ -172,6 +172,7 @@ def result(language=default_language):
     params.update({
         'site_addr': f'{request.scheme}://{request.host}',
         'languages': languages,
+        'language': language,
         'country': country
     })
     params.update({
