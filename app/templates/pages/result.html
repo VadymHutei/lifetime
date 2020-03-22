@@ -37,6 +37,14 @@
     <caption>{{ translate('initial data').capitalize() }}</caption>
     <tbody>
         <tr>
+            <td>{{ translate('sex').capitalize() }}</td>
+            <td>{{ sex }}</td>
+        </tr>
+        <tr>
+            <td>{{ translate('country').capitalize() }}</td>
+            <td>{{ country }}</td>
+        </tr>
+        <tr>
             <td>{{ translate('date of birth').capitalize() }}</td>
             <td>{{ birth_date }}</td>
         </tr>
@@ -46,23 +54,15 @@
         </tr>
         <tr>
             <td>{{ translate('already lived').capitalize() }}</td>
-            <td>{{ lived['years'] }} {{ translate('years') }} {{ lived['months'] }} {{ translate('months') }}</td>
-        </tr>
-        <tr>
-            <td>{{ translate('sex').capitalize() }}</td>
-            <td>{{ sex }}</td>
-        </tr>
-        <tr>
-            <td>{{ translate('country').capitalize() }}</td>
-            <td>{{ country }}</td>
+            <td>{{ dateFormate(**lived) }}</td>
         </tr>
         <tr>
             <td>{{ translate('estimated life expectancy').capitalize() }}</td>
-            <td>{{ life_length['years'] }} {{ translate('years') }} {{ life_length['months'] }} {{ translate('months') }}</td>
+            <td>{{ dateFormate(**life_length) }}</td>
         </tr>
     </tbody>
 </table>
 <p>{{ translate('expected date of death').capitalize() }}: {{ death_date }}</p>
-<p>{{ translate('left to live').capitalize() }}: <span class="lifeleft">{{ life_left['years'] }} {{ translate('years') }} {{ life_left['months'] }} {{ translate('months') }} {{ life_left['days'] }} {{ translate('days') }}</span></p>
+<p>{{ translate('left to live').capitalize() }}: <span class="lifeleft">{{ dateFormate(**life_left) }}</span></p>
 <a href="/">{{ translate('home_page').capitalize() }}</a>
 {% endblock %}
