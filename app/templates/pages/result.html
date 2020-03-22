@@ -1,37 +1,65 @@
 {% extends "layout/layout.html" %}
 
-{% block title %}{{ translate('title_result') }}{% endblock %}
 
-{% block description %}{{ translate('descriptioin_result') }}{% endblock %}
+{% block title -%}
 
-{% block opengraph %}
-<meta name="og:title" content="{{ translate('title_result') }}">
+LifeTime - {{ translate('title_result').capitalize() }}
+
+{%- endblock %}
+
+
+{% block description -%}
+
+{{ translate('descriptioin_result') }}
+
+{%- endblock %}
+
+
+{% block opengraph -%}
+
+<meta name="og:title" content="LifeTime - {{ translate('title_result').capitalize() }}">
 <meta name="og:description" content="{{ translate('descriptioin_result') }}">
-<meta name="og:url" content="http://lifetime.hutei.net/result">
+<meta name="og:url" content="{{ site_addr }}/{{ language }}/result">
 <meta name="og:site_name" content="LifeTime">
 <meta name="og:type" content="website">
-{% endblock %}
 
-{% block schemaorg %}
+{%- endblock %}
+
+
+{% block schemaorg -%}
+
 <script type="application/ld+json">
     {
         "@context": "https://schema.org/",
         "@type": "WebSite",
-        "name": "LifeTime",
-        "url": "http://lifetime.hutei.net/",
+        "name": "LifeTime - {{ translate('title_result').capitalize() }}",
+        "description": "{{ translate('descriptioin_result') }}",
+        "url": "{{ site_addr }}/{{ language }}/result",
         "copyrightYear": 2020,
+        "dateCreated": "2020-03-05",
         "creator": {
             "@type": "Person",
             "name": "Vadym Hutei",
-            "url": "",
-            "image": "",
             "sameAs": "https://github.com/VadymHutei"  
         }
     }
 </script>
-{% endblock %}
 
-{% block content %}
+{% if country['type'] == 'country': %}
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "Country",
+        "name": "{{ country['name'][language] }}"
+    }
+</script>
+{% endif %}
+
+{%- endblock %}
+
+
+{% block content -%}
+
 <h1>{{ translate('page_title_result') }}</h1>
 <table>
     <caption>{{ translate('initial data').capitalize() }}</caption>
@@ -42,7 +70,7 @@
         </tr>
         <tr>
             <td>{{ translate('country').capitalize() }}</td>
-            <td>{{ country }}</td>
+            <td>{{ country['name'][language] }}</td>
         </tr>
         <tr>
             <td>{{ translate('date of birth').capitalize() }}</td>
@@ -65,4 +93,5 @@
 <p>{{ translate('expected date of death').capitalize() }}: {{ death_date }}</p>
 <p>{{ translate('left to live').capitalize() }}: <span class="lifeleft">{{ dateFormate(**life_left) }}</span></p>
 <a href="/">{{ translate('home_page').capitalize() }}</a>
-{% endblock %}
+
+{%- endblock %}
