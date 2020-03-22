@@ -5,3 +5,8 @@ db = {
     'db': 'db_name',
     'charset': 'utf8mb4'
 }
+
+admin_key = 'admin_key'
+
+DATE_SEPARATOR = '/'
+DATE_FORMAT = f'%d {DATE_SEPARATOR} %m (%b) {DATE_SEPARATOR} %Y'
