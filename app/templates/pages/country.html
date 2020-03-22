@@ -1,44 +1,66 @@
 {% extends "layout/layout.html" %}
 
-{% block title %}LifeTime - {{ translate('h1_country') }} {{ country['locative'][language] }}{% endblock %}
 
-{% block description %}Find out how much you have left to live{% endblock %}
+{% block title -%}
 
-{% block opengraph %}
+LifeTime - {{ translate('title_home').capitalize() }} {{ country['locative'][language] }}
 
-<meta name="og:title" content="LifeTime - {{ translate('h1_country') }} {{ country['locative'][language] }}">
-<meta name="og:description" content="Find out how much you have left to live">
-<meta name="og:url" content="http://lifetime.hutei.net/{{ language }}/{{ country['alias'] }}">
+{%- endblock %}
+
+
+{% block description -%}
+
+{{ translate('description_home') }} {{ country['locative'][language] }}
+
+{%- endblock %}
+
+
+{% block opengraph -%}
+
+<meta name="og:title" content="LifeTime - {{ translate('title_home').capitalize() }} {{ country['locative'][language] }}">
+<meta name="og:description" content="{{ translate('description_home') }} {{ country['locative'][language] }}">
+<meta name="og:url" content="{{ site_addr }}/{{ language }}/{{ country['alias'] }}">
 <meta name="og:site_name" content="LifeTime">
 <meta name="og:type" content="website">
 
-{% endblock %}
+{%- endblock %}
 
-{% block schemaorg %}
+
+{% block schemaorg -%}
 
 <script type="application/ld+json">
     {
         "@context": "https://schema.org/",
         "@type": "WebSite",
-        "name": "{{ translate('h1_country') }} {{ country['locative'][language] }}",
-        "url": "http://lifetime.hutei.net/{{ language }}/{{ country['alias'] }}",
+        "name": "{{ translate('title_home').capitalize() }} {{ country['locative'][language] }}",
+        "description": "{{ translate('description_home') }} {{ country['locative'][language] }}",
+        "url": "{{ site_addr }}/{{ language }}/{{ country['alias'] }}",
         "copyrightYear": 2020,
+        "dateCreated": "2020-03-05",
         "creator": {
             "@type": "Person",
             "name": "Vadym Hutei",
-            "url": "",
-            "image": "",
             "sameAs": "https://github.com/VadymHutei"  
         }
     }
 </script>
 
-{% endblock %}
+{% if country['type'] == 'country': %}
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "Country",
+        "name": "{{ country['name'][language] }}"
+    }
+</script>
+{% endif %}
+
+{%- endblock %}
 
 
-{% block content %}
+{% block content -%}
 
-<h1>{{ translate('h1_country').capitalize() }} {{ country['locative'][language] }}</h1>
+<h1>{{ translate('title_home').capitalize() }} {{ country['locative'][language] }}</h1>
 
 <section>
     {% set text_template = 'pages/country/text_' + language + '.html' %}
@@ -68,4 +90,4 @@
     </form>
 </section>
 
-{% endblock %}
+{%- endblock %}
