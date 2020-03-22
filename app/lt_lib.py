@@ -39,32 +39,14 @@ def getDateFormator(language=None):
                     return word[2]
             return rule
 
-        all_rules = {
-            'eng': {
-                'years': getRule('eng', 'years'),
-                'months': getRule('eng', 'months'),
-                'days': getRule('eng', 'days')
-            },
-            'rus': {
-                'years': getRule('rus', 'years'),
-                'months': getRule('rus', 'months'),
-                'days': getRule('rus', 'days')
-            },
-            'ukr': {
-                'years': getRule('ukr', 'years'),
-                'months': getRule('ukr', 'months'),
-                'days': getRule('ukr', 'days')
-            }
-        }
-        all_rules['default'] = all_rules['eng']
-        rules = all_rules[language] if language in all_rules else all_rules['default']
         result = []
-        for item, rule in rules.items():
+        for item in ('years', 'months', 'days'):
             value = kwargs.get(item)
             if value is None or value == 0:
                 continue
             if not isinstance(value, int):
                 raise Exception(f'wrong type of "{item}" parameter')
+            rule = getRule(language, item)
             result.append(f'{value} {rule(value)}')
         return ' '.join(result)
     return dateFormate

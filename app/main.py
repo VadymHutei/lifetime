@@ -1,6 +1,7 @@
 from datetime import date, datetime
 import math
 from functools import wraps
+import locale
 
 from flask import (Flask, render_template, request, abort, redirect, url_for,
     send_from_directory)
@@ -150,28 +151,33 @@ def result(language=default_language):
     life_left = relativedelta(death_date, today_date)
 
     params = {
-        'site_addr': f'{request.scheme}://{request.host}',
-        'languages': languages,
-        'translate': lt_lib.getTranslator(translations, language),
-        'today_date': today_date.strftime('%d %b %Y'),
-        'birth_date': birth_date.strftime('%d %b %Y'),
+        'birth_date': birth_date.strftime(config.DATE_FORMAT),
+        'today_date': today_date.strftime(config.DATE_FORMAT),
+        'lived': {
+            'years': abs(lived.years),
+            'months': abs(lived.months)
+        },
         'life_length': {
             'years': life_length_years,
             'months': life_length_months
         },
-        'death_date': death_date.strftime('%d %b %Y'),
+        'death_date': death_date.strftime(config.DATE_FORMAT),
         'life_left': {
             'years': life_left.years,
             'months': life_left.months,
             'days': life_left.days
         },
         'sex': genders[gender][language]['name'],
-        'country': country,
-        'lived': {
-            'years': abs(lived.years),
-            'months': abs(lived.months)
-        }
     }
+    params.update({
+        'site_addr': f'{request.scheme}://{request.host}',
+        'languages': languages,
+        'country': country
+    })
+    params.update({
+        'translate': lt_lib.getTranslator(translations, language),
+        'dateFormate': lt_lib.getDateFormator(language=language)
+    })
 
     return render_template('pages/result.html', **params)
 
