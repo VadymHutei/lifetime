@@ -1,5 +1,5 @@
 <header>
-    {% for code, name in languages.items(): %}
-    <a href="{{ site_addr }}/{{ code }}">{{ name }}</a>
+    {% for code, language in languages.items(): %}
+    <a href="{{ site_addr }}/{{ code }}">{{ language['name'] }}</a>
     {% endfor %}
 </header>
