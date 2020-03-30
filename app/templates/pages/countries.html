@@ -3,7 +3,7 @@
 
 {% block title -%}
 
-{{ translate('title_countries') }}
+LifeTime - {{ translate('title_countries').capitalize() }}
 
 {%- endblock %}
 
@@ -17,7 +17,7 @@
 
 {% block opengraph -%}
 
-<meta name="og:title" content="{{ translate('title_countries') }}">
+<meta name="og:title" content="LifeTime - {{ translate('title_countries').capitalize() }}">
 <meta name="og:description" content="{{ translate('description_countries') }}">
 <meta name="og:url" content="{{ site_addr }}/{{ language }}/countries">
 <meta name="og:site_name" content="LifeTime">
@@ -31,9 +31,11 @@
     {
         "@context": "https://schema.org/",
         "@type": "WebSite",
-        "name": "LifeTime",
-        "url": "{{ site_addr }}/{{ language }}",
+        "name": "LifeTime - {{ translate('title_countries').capitalize()",
+        "description": "{{ translate('description_countries') }}"
+        "url": "{{ site_addr }}/{{ language }}/countries",
         "copyrightYear": 2020,
+        "dateCreated": "2020-03-05",
         "creator": {
             "@type": "Person",
             "name": "Vadym Hutei",
