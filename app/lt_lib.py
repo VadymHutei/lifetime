@@ -107,7 +107,8 @@ def getLanguages():
                 SELECT
                     `code`,
                     `name`,
-                    `default`
+                    `default`,
+                    `iso_639-1`
                 FROM
                     `languages`
             """
@@ -118,7 +119,11 @@ def getLanguages():
     languages = {}
     default_language = None
     for lang in result:
-        languages[lang['code']] = lang['name']
+        languages[lang['code']] = {
+            'code': lang['code'],
+            'iso_639-1': lang['iso_639-1'],
+            'name': lang['name']
+        }
         if lang['default'] == 'Y':
             default_language = lang['code']
     return languages, default_language
