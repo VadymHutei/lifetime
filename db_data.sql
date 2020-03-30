@@ -747,7 +747,7 @@ INSERT INTO `countries_text` (`country_id`, `lang`, `name`, `locative`) VALUES
 	(180, 'eng', 'Zimbabwe', 'in Zimbabwe'),
 	(180, 'rus', 'Зимбабве', 'в Зимбабве'),
 	(180, 'ukr', 'Зімбабве', 'в Зімбабве'),
-	(181, 'eng', 'World', 'in World'),
+	(181, 'eng', 'World', 'in the World'),
 	(181, 'rus', 'Мир', 'в Мире'),
 	(181, 'ukr', 'світ', 'в світі'),
 	(182, 'eng', 'Arab States', 'in Arab States'),
@@ -773,7 +773,7 @@ INSERT INTO `countries_text` (`country_id`, `lang`, `name`, `locative`) VALUES
 	(188, 'ukr', 'Англія', 'в Англії');
 /*!40000 ALTER TABLE `countries_text` ENABLE KEYS */;
 
--- Dumping data for table lifetime.genders: ~3 rows (приблизно)
+-- Dumping data for table lifetime.genders: ~2 rows (приблизно)
 /*!40000 ALTER TABLE `genders` DISABLE KEYS */;
 INSERT INTO `genders` (`id`) VALUES
 	(1),
@@ -797,13 +797,13 @@ INSERT INTO `genders_text` (`gender_id`, `lang`, `name`) VALUES
 
 -- Dumping data for table lifetime.languages: ~3 rows (приблизно)
 /*!40000 ALTER TABLE `languages` DISABLE KEYS */;
-INSERT INTO `languages` (`code`, `name`, `default`) VALUES
-	('eng', 'english', 'Y'),
-	('rus', 'русский', 'N'),
-	('ukr', 'українська', 'N');
+INSERT INTO `languages` (`code`, `name`, `default`, `iso_639-1`) VALUES
+	('eng', 'english', 'Y', 'en'),
+	('rus', 'русский', 'N', 'ru-ru'),
+	('ukr', 'українська', 'N', 'uk-ua');
 /*!40000 ALTER TABLE `languages` ENABLE KEYS */;
 
--- Dumping data for table lifetime.life_exp: ~561 rows (приблизно)
+-- Dumping data for table lifetime.life_exp: ~522 rows (приблизно)
 /*!40000 ALTER TABLE `life_exp` DISABLE KEYS */;
 INSERT INTO `life_exp` (`country_id`, `gender_id`, `life_exp`) VALUES
 	(32, 3, 50.6),
@@ -1372,13 +1372,13 @@ INSERT INTO `life_exp` (`country_id`, `gender_id`, `life_exp`) VALUES
 	(97, 2, 87.6);
 /*!40000 ALTER TABLE `life_exp` ENABLE KEYS */;
 
--- Dumping data for table lifetime.log: ~326 rows (приблизно)
+-- Dumping data for table lifetime.log: ~578 rows (приблизно)
 /*!40000 ALTER TABLE `log` DISABLE KEYS */;
 -- Historical request rows removed during the 2026-10-31 privacy audit.
 
 /*!40000 ALTER TABLE `log` ENABLE KEYS */;
 
--- Dumping data for table lifetime.translations: ~75 rows (приблизно)
+-- Dumping data for table lifetime.translations: ~72 rows (приблизно)
 /*!40000 ALTER TABLE `translations` DISABLE KEYS */;
 INSERT INTO `translations` (`code`, `lang`, `translation`) VALUES
 	('already lived', 'eng', 'already lived'),
@@ -1402,18 +1402,18 @@ INSERT INTO `translations` (`code`, `lang`, `translation`) VALUES
 	('descriptioin_result', 'eng', 'Your results'),
 	('descriptioin_result', 'rus', 'Ваши результаты'),
 	('descriptioin_result', 'ukr', 'Ваші результати'),
-	('description_home', 'eng', 'Find out how much you have left to live'),
-	('description_home', 'rus', 'Узнать сколько осталось жить'),
-	('description_home', 'ukr', 'Дізнатися скільки залишилося жити'),
+	('description_countries', 'eng', 'LifeTime - list of countries. Select a country to see its average life expectancy. And also find out how much you will live with such a life expectancy'),
+	('description_countries', 'rus', 'LifeTime - список стран. Выберите страну, чтобы узнать, какая в ней средняя ожидаемая продолжительность жизни. А также узнайте, сколько Вы проживете при такой продолжительности жизни'),
+	('description_countries', 'ukr', 'LifeTime - список країн. Виберіть країну, щоб дізнатися, яка в ній середня очікувана тривалість життя. А також дізнайтеся, скільки Ви проживете при такій тривалості життя'),
+	('description_home', 'eng', 'Find out the average life expectancy and how much you have left to live'),
+	('description_home', 'rus', 'Узнайте среднюю продолжительность жизни и сколько Вам осталось жить'),
+	('description_home', 'ukr', 'Дізнайтеся середню тривалість життя і скільки Вам залишилося жити'),
 	('estimated life expectancy', 'eng', 'estimated life expectancy'),
 	('estimated life expectancy', 'rus', 'предполагаемая продолжительность жизни'),
 	('estimated life expectancy', 'ukr', 'орієнтовна тривалість життя'),
 	('expected date of death', 'eng', 'expected date of death'),
 	('expected date of death', 'rus', 'ожидаемая дата смерти'),
 	('expected date of death', 'ukr', 'очікувана дата смерті'),
-	('h1_country', 'eng', 'average life expectancy'),
-	('h1_country', 'rus', 'средняя продолжительность жизни'),
-	('h1_country', 'ukr', 'середня тривалість життя'),
 	('home_page', 'eng', 'home page'),
 	('home_page', 'rus', 'домашняя страница'),
 	('home_page', 'ukr', 'домашня сторінка'),
@@ -1441,12 +1441,15 @@ INSERT INTO `translations` (`code`, `lang`, `translation`) VALUES
 	('submit', 'eng', 'submit'),
 	('submit', 'rus', 'отправить'),
 	('submit', 'ukr', 'надіслати'),
-	('title_home', 'eng', 'LifeTime - how long will you live'),
-	('title_home', 'rus', 'LifeTime - сколько вам осталось жить'),
-	('title_home', 'ukr', 'LifeTime - скільки вам залишилось жити'),
-	('title_result', 'eng', 'LifeTime - result'),
-	('title_result', 'rus', 'LifeTime - результаты'),
-	('title_result', 'ukr', 'LifeTime - результати'),
+	('title_countries', 'eng', 'list of countries'),
+	('title_countries', 'rus', 'список стран'),
+	('title_countries', 'ukr', 'список країн'),
+	('title_home', 'eng', 'average life expectancy'),
+	('title_home', 'rus', 'средняя продолжительность жизни'),
+	('title_home', 'ukr', 'середня тривалість життя'),
+	('title_result', 'eng', 'your result'),
+	('title_result', 'rus', 'ваши результаты'),
+	('title_result', 'ukr', 'ваші результати'),
 	('today', 'eng', 'today'),
 	('today', 'rus', 'сегодня'),
 	('today', 'ukr', 'сьогодні'),
