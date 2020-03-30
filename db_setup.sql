@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
   `alias` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `alias` (`alias`)
-) ENGINE=InnoDB AUTO_INCREMENT=188 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=189 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Дані для експорту не вибрані
 
@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `languages` (
   `code` char(3) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `default` enum('Y','N') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N',
+  `iso_639-1` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -95,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `log` (
   `date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ip` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=330 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=641 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Дані для експорту не вибрані
 
@@ -103,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `log` (
 CREATE TABLE IF NOT EXISTS `translations` (
   `code` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lang` char(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `translation` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `translation` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`code`,`lang`),
   KEY `FK_translations_languages` (`lang`),
   CONSTRAINT `FK_translations_languages` FOREIGN KEY (`lang`) REFERENCES `languages` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION
