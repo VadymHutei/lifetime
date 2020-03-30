@@ -47,6 +47,18 @@ LifeTime - {{ translate('title_home').capitalize() }}
 
 {%- endblock %}
 
+
+{% block alternate -%}
+
+{% for code, lang in languages.items(): %}
+{% if code != language: %}
+<link rel="alternate" hreflang="{{ lang['iso_639-1'] }}" href="{{ site_addr }}/{{ code }}" />
+{% endif %}
+{% endfor %}
+
+{%- endblock %}
+
+
 {% block content -%}
 
 <section>
