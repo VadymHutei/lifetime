@@ -25,14 +25,15 @@ LifeTime - {{ translate('title_countries').capitalize() }}
 
 {%- endblock %}
 
+
 {% block schemaorg -%}
 
 <script type="application/ld+json">
     {
         "@context": "https://schema.org/",
         "@type": "WebSite",
-        "name": "LifeTime - {{ translate('title_countries').capitalize()",
-        "description": "{{ translate('description_countries') }}"
+        "name": "LifeTime - {{ translate('title_countries').capitalize() }}",
+        "description": "{{ translate('description_countries') }}",
         "url": "{{ site_addr }}/{{ language }}/countries",
         "copyrightYear": 2020,
         "dateCreated": "2020-03-05",
@@ -47,6 +48,7 @@ LifeTime - {{ translate('title_countries').capitalize() }}
 </script>
 
 {%- endblock %}
+
 
 {% block content -%}
 
