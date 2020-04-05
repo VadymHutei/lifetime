@@ -61,6 +61,8 @@ LifeTime - {{ translate('title_home').capitalize() }}
 
 {% block content -%}
 
+<h1>{{ translate('title_home').capitalize() }}</h1>
+
 <section>
     {% set text_template = 'pages/home/text_' + language + '.html' %}
     {% include text_template ignore missing with context %}
