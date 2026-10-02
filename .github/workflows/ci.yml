@@ -1,0 +1,68 @@
+name: LifeTime checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.8'
+          cache: pip
+          cache-dependency-path: requirements-dev-lock.txt
+      - name: Install resolved dependencies
+        run: python -m pip install --require-hashes -r requirements-dev-lock.txt
+      - name: Check environment and code
+        run: |
+          python -m pip check
+          python -m ruff check lifetime migrations scripts tests
+          python -m ruff format --check lifetime migrations scripts tests
+          python -m pytest
+      - name: Audit runtime dependency lock
+        run: python -m pip_audit -r requirements-lock.txt --disable-pip
+      - name: Build distributable
+        run: python -m build --no-isolation
+      - name: Verify release metadata
+        run: |
+          python -m pip install --no-deps dist/*.whl
+          python - <<'PY'
+          from importlib.metadata import version
+          from pathlib import Path
+          import os
+          release = Path('VERSION').read_text().strip()
+          assert version('lifetime-service') == release
+          ref = os.environ.get('GITHUB_REF', '')
+          if ref.startswith('refs/tags/v'):
+              assert ref.removeprefix('refs/tags/v') == release
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lifetime-distribution
+          path: dist/
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Compose and build
+        run: |
+          docker compose config --quiet
+          docker compose build
+      - name: Initialize fresh volume and start
+        run: |
+          docker compose run --rm app flask --app lifetime migrate
+          docker compose run --rm app flask --app lifetime import-data
+          docker compose up -d --wait --wait-timeout 60
+          curl --fail http://127.0.0.1:8057/readyz
+          curl --fail http://127.0.0.1:8057/uk
+          curl --fail http://127.0.0.1:8057/sitemap.xml
+      - name: Stop isolated CI containers
+        if: always()
+        run: docker compose down --volumes

@@ -1,0 +1,16 @@
+# Whitelist: no legacy SQL, historical IP logs, secrets or working databases.
+**
+!Dockerfile
+!.dockerignore
+!requirements-lock.txt
+!VERSION
+!lifetime/
+!lifetime/**
+!migrations/
+!migrations/**
+!data/
+!data/life_expectancy/
+!data/life_expectancy/**
+**/__pycache__/
+**/*.pyc
+**/legacy_input.sql
