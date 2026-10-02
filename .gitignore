@@ -137,3 +137,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# LifeTime 2 runtime and local QA artifacts
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+.artifacts/
+.test-tmp/
+.ruff_cache/
+.coverage*
+htmlcov/
+*.jsonl

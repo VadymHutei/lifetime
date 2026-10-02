@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% set has_calculator = selected.available %}
+{% block content %}
+<section class="hero compact"><a class="eyebrow breadcrumb" href="/{{ locale }}/countries">← {{ t('countries') }}</a><h1>{{ t('location_heading') }} {{ selected.name }}</h1><p>{{ t('location_copy') if selected.available else t('unavailable_copy') }}</p></section>
+{% if selected.available %}<section class="panel location-overview"><div class="stat-grid">{% for group in ['total','female','male'] %}<div class="stat {% if group == 'total' %}reference-stat{% endif %}"><span>{{ t(group) }} · {{ selected.year }}</span><strong>{{ number(selected['values'][group]) }} <small>{{ t('years') }}</small></strong></div>{% endfor %}</div><p class="subtle">{{ t('reference_copy') }}</p>{% include '_source.html' %}</section><div class="location-form">{% include '_form.html' %}</div>{% else %}<section class="panel unavailable-panel"><span class="eyebrow">{{ t('unavailable_title') }}</span><p>{{ t('unavailable_copy') }}</p><a href="/{{ locale }}/countries" class="button secondary">{{ t('explore') }} ↗</a></section>{% endif %}
+{% endblock %}

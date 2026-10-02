@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% set has_calculator = true %}
+{% block content %}
+<section class="hero"><span class="eyebrow"><span class="status-dot" aria-hidden="true"></span>{{ t('tagline') }}</span><h1>{{ t('hero_title') }}</h1><p>{{ t('hero_copy') }}</p></section>
+{% if result %}
+<section class="panel result-panel" id="result" aria-labelledby="result-heading">
+  <div class="result-heading"><div><span class="eyebrow">{{ t('age') }}</span><h2 id="result-heading">{{ t('lived_title') }}</h2></div><a class="text-link" href="#parameters">{{ t('edit') }} ↓</a></div>
+  <p class="age-value">{{ duration(result.age_years, 'years') }} <span class="age-detail">{{ duration(result.age_months, 'months') }} · {{ duration(result.age_days, 'days') }}</span></p>
+  <div class="stat-grid"><div class="stat"><span>{{ t('lived_days') }}</span><strong>{{ number(result.lived_days, 0) }}</strong></div><div class="stat"><span>{{ t('lived_weeks') }}</span><strong>{{ number(result.lived_weeks, 0) }}</strong></div><div class="stat reference-stat"><span>{{ t('perspective') }} · {{ selected.name }} · {{ t(form.sex) }}</span><strong>{{ number(result.expectancy) }} <small>{{ t('years') }}</small></strong></div></div>
+  <div class="comparison"><div class="comparison-label"><label for="age-progress">{{ t('comparison') }}</label><span>{{ number(result.progress_percent, 1) }}%</span></div><progress id="age-progress" class="comparison-bar" value="{{ [result.progress_percent, 100]|min }}" max="100">{{ number(result.progress_percent, 1) }}%</progress><p>{{ t('beyond') if result.beyond_reference else t('comparison_hint') }}</p></div>
+  {% include '_source.html' %}
+</section>
+{% endif %}
+<div class="calculator-layout">{% include '_form.html' %}<aside class="perspective-panel"><span class="eyebrow">{{ t('perspective') }}</span><h2>{{ t('reference_title') }}</h2>{% if selected and selected.available %}{% set reference_group = form.sex if form.sex in ['total', 'female', 'male'] else 'total' %}<p class="reference-value">{{ number(selected['values'][reference_group]) }}<span>{{ t('years') }}</span></p><p class="reference-location">{{ selected.name }} <span>· {{ t(reference_group) }}</span></p>{% endif %}<p>{{ t('reference_copy') }}</p>{% include '_source.html' %}</aside></div>
+<section class="explore-banner"><div><h2>{{ t('discover_title') }}</h2><p>{{ t('discover_copy') }}</p></div><a class="button secondary" href="/{{ locale }}/countries">{{ t('explore') }} ↗</a></section>
+{% endblock %}

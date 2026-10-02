@@ -1,0 +1,63 @@
+{
+  "edge_requests": 6,
+  "recorded_events": 6,
+  "duplicate_events": 0,
+  "statuses": [
+    200,
+    413,
+    200,
+    200,
+    504,
+    502
+  ],
+  "spoofed_request_id_overridden": true,
+  "spoofed_forwarded_ip_overridden": true,
+  "credentials_dob_query_redacted_in_log_and_db": true,
+  "app_annotations_preserved": true,
+  "edge_only_413_502_recorded": true,
+  "rows": [
+    {
+      "status": 200,
+      "source": "app",
+      "edge_only": false,
+      "validity": "valid",
+      "client_class": "claimed_bot"
+    },
+    {
+      "status": 502,
+      "source": "edge",
+      "edge_only": true,
+      "validity": "unknown",
+      "client_class": "unknown"
+    },
+    {
+      "status": 504,
+      "source": "edge",
+      "edge_only": true,
+      "validity": "unknown",
+      "client_class": "unknown"
+    },
+    {
+      "status": 200,
+      "source": "app",
+      "edge_only": false,
+      "validity": "valid",
+      "client_class": "unknown"
+    },
+    {
+      "status": 200,
+      "source": "app",
+      "edge_only": false,
+      "validity": "valid",
+      "client_class": "unknown"
+    },
+    {
+      "status": 413,
+      "source": "edge",
+      "edge_only": true,
+      "validity": "invalid",
+      "client_class": "unknown"
+    }
+  ],
+  "scope": "Isolated optional nginx1.31.5-alpine + app; 502 uses closed upstream port; 504 uses stopped app"
+}
