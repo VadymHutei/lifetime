@@ -14,6 +14,14 @@ depends_on = None
 
 
 def upgrade():
+    # 2.0.0 shipped SQLite only. These dialect options leave its frozen DDL
+    # unchanged while making fresh MySQL 8.4 installations enforce FK/CHECK.
+    mysql = op.get_bind().dialect.name == "mysql"
+    options = (
+        {"mysql_engine": "InnoDB", "mysql_charset": "utf8mb4", "mysql_collate": "utf8mb4_bin"}
+        if mysql
+        else {}
+    )
     op.create_table(
         "dataset_versions",
         sa.Column("id", sa.String(64), primary_key=True),
@@ -23,12 +31,14 @@ def upgrade():
         sa.Column("retrieved_at", sa.String(40), nullable=False),
         sa.Column("metadata_json", sa.Text(), nullable=False),
         sa.Column("manifest_json", sa.Text(), nullable=False),
+        **options,
     )
     op.create_table(
         "active_reference",
-        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("id", sa.Integer(), primary_key=True, autoincrement=False if mysql else "auto"),
         sa.Column("dataset_id", sa.String(64), sa.ForeignKey("dataset_versions.id"), nullable=False),
         sa.CheckConstraint("id = 1"),
+        **options,
     )
     op.create_table(
         "locations",
@@ -43,6 +53,7 @@ def upgrade():
         sa.UniqueConstraint("dataset_id", "slug"),
         sa.CheckConstraint("entity_type IN ('country','territory','area','aggregate')"),
         sa.CheckConstraint("public IN (0,1)"),
+        **options,
     )
     op.create_index("ix_locations_type", "locations", ["dataset_id", "entity_type"])
     op.create_table(
@@ -62,6 +73,7 @@ def upgrade():
         sa.CheckConstraint(
             "(status = 'available' AND value_years IS NOT NULL AND missing_reason IS NULL) OR (status = 'missing' AND value_years IS NULL AND missing_reason IS NOT NULL)"
         ),
+        **options,
     )
     op.create_index("ix_expectancy_year", "life_expectancy", ["dataset_id", "year"])
     op.create_table(
@@ -73,6 +85,7 @@ def upgrade():
         sa.Column("metadata_json", sa.Text(), nullable=False),
         sa.UniqueConstraint("dataset_id", "legacy_alias"),
         sa.ForeignKeyConstraint(["dataset_id", "target_code"], ["locations.dataset_id", "locations.code"]),
+        **options,
     )
 
 

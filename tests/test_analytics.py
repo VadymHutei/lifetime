@@ -14,6 +14,8 @@ import unittest
 from unittest.mock import patch
 
 from sqlalchemy import create_engine, event as sql_event, select, text
+from sqlalchemy.dialects import mysql, sqlite
+from sqlalchemy.schema import CreateTable
 from alembic import command
 from alembic.config import Config
 from werkzeug.test import Client
@@ -75,10 +77,22 @@ class AnalyticsTests(unittest.TestCase):
         with self.engine.connect() as connection:
             self.assertEqual(
                 connection.execute(text("SELECT version_num FROM alembic_version")).scalar_one(),
-                "analytics_0002",
+                "analytics_0003",
             )
             for name in ("valid_requests", "bot_requests", "invalid_requests", "suspicious_requests"):
                 self.assertEqual(connection.execute(text("SELECT count(*) FROM " + name)).scalar_one(), 0)
+
+    def test_mysql_table_options_are_explicit_and_sqlite_ddl_unchanged(self):
+        from lifetime.analytics.schema import daily
+
+        for table in (events, daily):
+            mysql_ddl = str(CreateTable(table).compile(dialect=mysql.dialect()))
+            sqlite_ddl = str(CreateTable(table).compile(dialect=sqlite.dialect()))
+            self.assertIn("ENGINE=InnoDB", mysql_ddl)
+            self.assertIn("CHARSET=utf8mb4", mysql_ddl)
+            self.assertIn("utf8mb4_bin", mysql_ddl)
+            self.assertNotIn("InnoDB", sqlite_ddl)
+            self.assertNotIn("utf8mb4", sqlite_ddl)
 
     def test_key_id_migration_preserves_existing_events(self):
         for preexisting in (False, True):

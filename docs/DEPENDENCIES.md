@@ -1,4 +1,4 @@
-# LifeTime 2.0.0 — середовище й залежності
+# LifeTime 2.1.0 — середовище й залежності
 
 Дата перевірки: **2026-10-03**. Реалізований стек визначено в `pyproject.toml`; повні resolver locks із SHA-256 — `requirements-lock.txt` та `requirements-dev-lock.txt`. Dockerfile замінено новим runtime. Старий `app/requirements.txt` не використовується.
 
@@ -36,7 +36,9 @@
 7. CSS — звичайний файл, JS — vanilla modules/скрипти за потреби. Node/npm, frontend framework, SCSS-компілятор і bundler не є вимогою проєкту.
 8. Секрети та deployment-параметри — environment і `.env.example`; версія сервісу — `VERSION`, не environment. Секретні значення не входять у lock, логи чи документацію.
 
-Runtime lock містить 13 пакетів; tzdata 2026.4 забезпечує Europe/Kyiv у Windows. python-dateutil не знадобився: календарний модуль використовує standard library. pip check та runtime pip-audit пройшли без конфліктів і відомих вразливостей. Lock згенеровано pip-tools 7.6.1; точна версія інструмента також зафіксована в dev lock.
+У 2.1.0 додано [PyMySQL 1.2.3](https://pypi.org/project/PyMySQL/1.2.3/) із extra `rsa`, що встановлює cryptography для сучасної MySQL автентифікації. Версію перевірено 2026-10-03; офіційний реліз від 2026-09-17. Runtime lock містить 17 пакетів, включно з cryptography 50.0.2; tzdata 2026.4 забезпечує Europe/Kyiv у Windows. python-dateutil не знадобився: календарний модуль використовує standard library. pip check та runtime pip-audit пройшли без конфліктів і відомих вразливостей. Lock згенеровано pip-tools 7.6.1.
+
+MySQL перевірено на **8.4.11** (LTS), official image `mysql:8.4` pinned digest `sha256:6ea90827b1100f8f2ae306a539f86d2c264a26ed435a2a9f75551dd5c3aeb242`. Підключення — [SQLAlchemy MySQL dialect](https://docs.sqlalchemy.org/en/21/dialects/mysql.html) та [PyMySQL connection options](https://pymysql.readthedocs.io/en/latest/modules/connections.html). MariaDB/старі MySQL не входили до перевірки.
 
 Оновлення lock (після перевірки stable-релізів і тестів):
 

@@ -75,9 +75,47 @@ class ConfigurationTests(unittest.TestCase):
                 "ENVIRONMENT": "production",
                 "SERVICE_URL": "https://lifetime.example",
                 "ANALYTICS_SECRET": "x" * 32,
+                "DB_PASSWORD": "test-only-production-validation",
             }
         )
         self.assertEqual(config["SERVICE_URL"], "https://lifetime.example")
+
+    def test_mysql_default_single_database_and_literal_password(self):
+        config = settings({"DB_PASSWORD": "test@:/%#$only"})
+        reference = config["REFERENCE_DATABASE_URL"]
+        self.assertEqual(reference.drivername, "mysql+pymysql")
+        self.assertEqual(reference.password, "test@:/%#$only")
+        self.assertEqual(reference.database, "lifetime")
+        self.assertEqual(reference, config["ANALYTICS_DATABASE_URL"])
+        self.assertNotIn("test@:/%#$only", str(reference))
+
+    def test_sqlite_is_explicit_and_uses_overridden_directory(self):
+        config = settings({"DB_BACKEND": "sqlite", "DATA_DIR": self.folder})
+        self.assertEqual(Path(config["REFERENCE_DATABASE_URL"].database), self.folder / "reference.sqlite3")
+        self.assertNotEqual(config["REFERENCE_DATABASE_URL"], config["ANALYTICS_DATABASE_URL"])
+
+    def test_mysql_production_requires_password(self):
+        with self.assertRaisesRegex(ValueError, "DB_PASSWORD"):
+            settings(
+                {
+                    "ENVIRONMENT": "production",
+                    "SERVICE_URL": "https://lifetime.example",
+                    "ANALYTICS_SECRET": "x" * 32,
+                    "DB_PASSWORD": "",
+                }
+            )
+
+    def test_mysql_configuration_rejects_invalid_connection_fields(self):
+        for config in (
+            {"DB_BACKEND": "unknown"},
+            {"DB_PORT": 0},
+            {"DB_PORT": 65536},
+            {"DB_USER": ""},
+            {"DB_NAME": ""},
+            {"DB_HOST": ""},
+        ):
+            with self.subTest(config=config), self.assertRaises(ValueError):
+                settings(config)
 
     def test_canonical_origin_rejects_credentials_and_path(self):
         for origin in (

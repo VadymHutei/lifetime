@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.1.0 — 2026-10-03
+
+- MySQL 8.4 LTS став основним сховищем: одна БД для довідника та аналітики, окремі таблиці й migration histories.
+- Додано DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASSWORD, PyMySQL з caching_sha2_password/RSA support, literal-password URL construction і optional verified TLS через DB_SSL_CA.
+- MySQL-сумісні InnoDB/utf8mb4 міграції, DOUBLE для точності демографічних значень, BIGINT для лічильників; SQLite лишається explicit compatibility profile.
+- Конкурентний app/edge dedup та batched retention працюють із row locking/atomic counters на MySQL; bounded connection/read/write/lock timeouts і spool fallback.
+- Додано optional локальний MySQL Compose profile, MySQL CI tests, інструкції credentials/mysqldump/restore. SQLite backup відхиляє MySQL до запису файлів.
+- Production доступи та дані не змінювалися; SQLite/legacy logs автоматично не переносяться. Деталі перевірок — [MYSQL_VALIDATION](docs/MYSQL_VALIDATION.md).
+
 ## 2.0.0 — 2026-10-03
 
 ### Сервіс

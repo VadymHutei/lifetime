@@ -2,6 +2,7 @@
 
 from sqlalchemy import (
     JSON,
+    BigInteger,
     Column,
     Float,
     Index,
@@ -26,7 +27,7 @@ events = Table(
     Column("query", JSON, nullable=False),
     Column("status", Integer, nullable=False),
     Column("duration_ms", Float, nullable=False),
-    Column("response_bytes", Integer),
+    Column("response_bytes", BigInteger),
     Column("address_token", String(64)),
     Column("address_key_id", String(12)),
     Column("address_family", Integer),
@@ -44,6 +45,9 @@ events = Table(
     Column("ruleset_version", String(24), nullable=False),
     Column("confidence", Float, nullable=False),
     Column("flags", JSON, nullable=False),
+    mysql_engine="InnoDB",
+    mysql_charset="utf8mb4",
+    mysql_collate="utf8mb4_bin",
 )
 Index("ix_events_timestamp", events.c.timestamp)
 Index("ix_events_status_time", events.c.status, events.c.timestamp)
@@ -60,5 +64,8 @@ daily = Table(
     Column("client_class", String(24), primary_key=True),
     Column("security_class", String(24), primary_key=True),
     Column("outcome", String(24), primary_key=True),
-    Column("count", Integer, nullable=False),
+    Column("count", BigInteger, nullable=False),
+    mysql_engine="InnoDB",
+    mysql_charset="utf8mb4",
+    mysql_collate="utf8mb4_bin",
 )

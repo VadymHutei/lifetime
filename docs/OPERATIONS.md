@@ -1,10 +1,10 @@
 # LifeTime: запуск, журнал і відновлення
 
-Контейнер: офіційний Python 3.14.8-slim з digest у Dockerfile, Gunicorn (2 workers × 4 threads), UID/GID `10001`, локальний persistent volume `/var/lib/lifetime`. Міграції та імпорт — явні операторські команди. Startup і HTTP їх не запускають. Legacy `app/`, SQL dumps, історичні IP logs, робочі БД і `.env` виключені з build context/image.
+Версія 2.1.0: основна БД — MySQL 8.4 LTS через PyMySQL, конфігурація `DB_*` у `.env`; креди production задає оператор перед запуском. Одна MySQL БД містить окремі reference/analytics таблиці. Контейнер: Python 3.14.8-slim з pinned digest, Gunicorn (2 workers × 4 threads), UID/GID `10001`, persistent volume `/var/lib/lifetime` для spool/ключа. Міграції та імпорт — явні операторські команди. Startup і HTTP їх не запускають. Legacy `app/`, SQL dumps, історичні IP logs, робочі БД і `.env` виключені з image.
 
 ## Локальний Docker
 
-Потрібен Docker Compose з optional `env_file` (2.24+). Без `.env` профіль development доступний на loopback `127.0.0.1:8057`.
+Потрібен Docker Compose з optional `env_file` (2.24+). Скопіюйте `.env.example` у `.env` і налаштуйте доступ до MySQL, створену БД та користувача. HTTP доступний на loopback `127.0.0.1:8057`. Нижче команди для зовнішнього сервера; локальна MySQL запускається додатковим `-f compose.mysql.yaml`, як описано в README. Профіль SQLite тепер потребує явного `DB_BACKEND=sqlite`.
 
 ```sh
 docker compose config --quiet
@@ -45,6 +45,13 @@ Ingestion/replay ідемпотентні за request/event id. Edge final stat
 
 ## Backup, restore, rollback
 
+Для MySQL використовуйте `mysqldump --single-transaction` із захищеним option file;
+повна процедура backup/isolated restore та мінімальні права — [MYSQL.md](MYSQL.md).
+`flask backup` підтримує лише SQLite й відхиляє MySQL до створення destination.
+Зміна DB_BACKEND не копіює старі SQLite logs або legacy MySQL таблиці.
+
+Наведений нижче файловий backup застосовується лише до SQLite compatibility profile.
+
 Перед міграцією збережіть image digest, VERSION і active dataset id. Backup використовує SQLite backup API, включаючи committed WAL contents:
 
 ```sh
@@ -65,6 +72,10 @@ docker compose restart app
 Dataset id беріть з backup metadata чи import output. App/schema rollback використовує попередній immutable image й перевірений compatible backup. Legacy MySQL migration потребує окремого backup/export фактичної схеми; несумісні legacy seeds і historical IP logs у нові БД не імпортуються.
 
 ## Перевірено під час реалізації
+
+Для MySQL 2.1.0 актуальні результати — [MYSQL_VALIDATION.md](MYSQL_VALIDATION.md)
+та [MYSQL_BACKUP_CHECK.json](MYSQL_BACKUP_CHECK.json). Нижче — базові перевірки,
+виконані під час створення 2.0.0.
 
 Docker Compose config, official Python image pull, Linux runtime install із hashes і `pip check`, nonroot image build, міграції/імпорт до окремого validation volume, Gunicorn start та container readiness пройшли локально. Nginx 1.31.5-alpine `nginx -t` підтвердив template після підготовки log directory. Подальші зміни runtime/VERSION потребують нового image build. CI workflow визначений у repository; факт його додавання не означає запуск GitHub Actions.
 

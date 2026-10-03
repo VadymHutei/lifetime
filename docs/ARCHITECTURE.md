@@ -1,6 +1,6 @@
-# Архітектура Lifetime 2.0.0
+# Архітектура Lifetime 2.1.0
 
-Статус: архітектурний контракт реалізованої версії 2.0.0. Дата: 2026-10-03. Фактичні команди — README та OPERATIONS, докази перевірок — VALIDATION. Версії runtime та залежностей — DEPENDENCIES і lock-файли.
+Статус: контракт версії 2.1.0. За уточненням користувача основним сховищем став MySQL. Фактичні команди — README, OPERATIONS та MYSQL; перевірки — VALIDATION (2.0.0) і MYSQL_VALIDATION (2.1.0). Версії залежностей — DEPENDENCIES і locks.
 
 ## Межі продукту
 
@@ -44,9 +44,11 @@ Production: актуальний підтримуваний Python і перев
 
 ## Вибір БД та схема даних
 
-Типово — SQLite на одному сервері з локальним persistent volume. Окремі файли `reference.sqlite3` і `analytics.sqlite3` відокремлюють імпорт статистики від частих INSERT журналу; можна застосувати спільні migration definitions до обох сховищ. SQLite підтримує один writer одночасно, тому потрібні WAL, короткі транзакції, bounded busy timeout і перевірка конкурентності. Не розміщувати ці файли на мережевій файловій системі, не запускати незалежні replicas із власними копіями БД. Це рекомендація для поточного малого сервісу, а не гарантія пропускної здатності. [Критерії SQLite](https://www.sqlite.org/whentouse.html), [обмеження WAL](https://www.sqlite.org/wal.html).
+Типово — MySQL 8.4 LTS, InnoDB, utf8mb4, одна application database. Reference і analytics мають окремі таблиці, pools та історії Alembic (`alembic_reference_version` / `alembic_version`). Через URL overrides можна рознести їх по двох БД. Транзакції — READ COMMITTED; connect/pool timeout 3 s, read/write 5 s, InnoDB row lock 1 s, recycle 1800 s. MySQL DOUBLE зберігає точність показників; BIGINT — великі лічильники. Edge merge бере row lock, purge обробляє до 1000 конкретних locked IDs за транзакцію й атомарно додає daily counts. Подальші інструкції — MYSQL.md.
 
-MySQL доречний, якщо лишається готова підтримувана інфраструктура, потрібні кілька вузлів або навантаження записами перевищує перевірений SQLite бюджет. Перемикання задається connection URL, а не умовами в маршрутах; concurrency тест і міграції перевіряються для обраної production БД. На першому етапі MySQL не розгортати автоматично лише через legacy-залежність.
+SQLite збережено для explicit `DB_BACKEND=sqlite`: окремі `reference.sqlite3` та `analytics.sqlite3`, WAL, short busy timeout. Файли мають бути на локальному persistent volume, не NFS і не незалежні replicas. Профіль MySQL не переносить ці файли чи їхню аналітику автоматично. [Критерії SQLite](https://www.sqlite.org/whentouse.html), [обмеження WAL](https://www.sqlite.org/wal.html).
+
+MySQL обрано користувачем для наявної інфраструктури. Перемикання задається конфігурацією, а не умовами в маршрутах. Production account, grants та hostname налаштовуються окремо; локальний Compose profile служить розробці та перевірці. Spool лишається локальним і потребує replay для кожного app instance.
 
 Reference schema:
 
@@ -129,9 +131,9 @@ Canonical для indexable сторінок — абсолютний URL без 
 
 ## Версія і реліз
 
-Один source of truth: кореневий `VERSION`, зараз `2.0.0-dev.0`, з SemVer `2.0.0` при завершенні реалізації. Footer, CLI, package metadata і telemetry app_version читають те саме значення; runtime не викликає git. Package / Docker build перевіряє присутність VERSION; файл включений в артефакт. Dataset version не прирівнюється до SemVer застосунку.
+Одне джерело версії: кореневий `VERSION`, поточний реліз `2.1.0`. Footer, CLI, package metadata і telemetry app_version читають те саме значення; runtime не викликає git. Package / Docker build перевіряє присутність VERSION; файл включений в артефакт. Dataset version не прирівнюється до SemVer застосунку.
 
-Підготовчі документи не є релізом 2.0.0. До завершення функцій і перевірок не створювати фінальний тег `v2.0.0` і не показувати його як випущений. На release commit після acceptance створити annotated git tag `v2.0.0`; CI перевіряє `tag[1:] == VERSION == package metadata`. Release notes описують новий UX, дані, URL redirects, приватність журналу й deployment міграцію. Push та deployment виконувати згідно з окремою авторизацією користувача.
+На release commit після acceptance створювати annotated git tag `vMAJOR.MINOR.PATCH`; CI перевіряє `tag[1:] == VERSION == package metadata`. Не пересувати старі release tags. Release notes описують зміни та deployment міграцію. Push і production deployment виконувати згідно з окремою авторизацією користувача.
 
 ## Legacy ризики і перехід
 

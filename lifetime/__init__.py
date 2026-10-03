@@ -44,8 +44,8 @@ def create_app(config=None):
             finally:
                 temporary.unlink(missing_ok=True)
         secret = key_file.read_text(encoding="ascii").strip()
-    reference_engine = make_engine(app.config["REFERENCE_DATABASE_URL"])
-    analytics_engine = make_engine(app.config["ANALYTICS_DATABASE_URL"])
+    reference_engine = make_engine(app.config["REFERENCE_DATABASE_URL"], ssl_ca=app.config["DB_SSL_CA"])
+    analytics_engine = make_engine(app.config["ANALYTICS_DATABASE_URL"], ssl_ca=app.config["DB_SSL_CA"])
     app.extensions["reference_engine"] = reference_engine
     app.extensions["analytics_engine"] = analytics_engine
     app.extensions["reference"] = ReferenceRepository(reference_engine)

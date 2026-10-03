@@ -13,6 +13,7 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
+from sqlalchemy.dialects.mysql import DOUBLE
 
 metadata = MetaData()
 dataset_versions = Table(
@@ -29,7 +30,7 @@ dataset_versions = Table(
 active_reference = Table(
     "active_reference",
     metadata,
-    Column("id", Integer, primary_key=True),
+    Column("id", Integer, primary_key=True, autoincrement=False),
     Column("dataset_id", String(64), ForeignKey("dataset_versions.id"), nullable=False),
     CheckConstraint("id = 1"),
 )
@@ -56,7 +57,7 @@ life_expectancy = Table(
     Column("year", Integer, primary_key=True),
     Column("sex", String(8), primary_key=True),
     Column("indicator", String(40), primary_key=True),
-    Column("value_years", Float),
+    Column("value_years", Float().with_variant(DOUBLE(asdecimal=False), "mysql")),
     Column("status", String(16), nullable=False),
     Column("missing_reason", String(100)),
     Column("metadata_json", Text, nullable=False),
