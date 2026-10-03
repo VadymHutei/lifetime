@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="{{ locale }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>{{ page_title }}</title>
+  <meta name="description" content="{{ description }}">
+  <meta property="og:title" content="{{ page_title }}">
+  <meta property="og:description" content="{{ description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="LifeTime">
+  {% if canonical %}<meta property="og:url" content="{{ canonical }}">{% endif %}
+  {% if noindex %}<meta name="robots" content="noindex, follow">{% endif %}
+  {% if canonical %}<link rel="canonical" href="{{ canonical }}">{% endif %}
+  {% for alternate in alternates %}<link rel="alternate" hreflang="{{ alternate.locale }}" href="{{ alternate.url }}">{% endfor %}
+  {% if default_url %}<link rel="alternate" hreflang="x-default" href="{{ default_url }}">{% endif %}
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+  {% for item in schema %}<script type="application/ld+json">{{ item|tojson }}</script>{% endfor %}
+</head>
+<body>
+  <a class="skip-link" href="#main">{{ t('skip') }}</a>
+  <header class="site-header shell">
+    <a class="brand" href="/{{ locale }}" aria-label="LifeTime"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 5h14M9 27h14M11 5c0 7 10 8 10 11S11 20 11 27M21 5c0 7-10 8-10 11s10 4 10 11"/></svg><span>Life<span class="brand-accent">Time</span></span></a>
+    <nav class="main-nav" aria-label="{{ t('calculator') }}"><a href="/{{ locale }}" {% if request.endpoint and request.endpoint.endswith('home') %}aria-current="page"{% endif %}>{{ t('calculator') }}</a><a href="/{{ locale }}/countries">{{ t('countries') }}</a><a href="/{{ locale }}/methodology">{{ t('methodology') }}</a></nav>
+    {% if has_calculator|default(false) %}<button type="submit" hidden tabindex="-1" aria-hidden="true" form="calculator-form" formaction="/{{ locale }}/result"></button>{% endif %}
+    <nav class="languages" aria-label="Language">
+      {% if has_calculator|default(false) %}
+      {% for lang in ['uk','en'] %}<button type="submit" form="calculator-form" formnovalidate class="language {% if locale == lang %}is-active{% endif %}" formaction="/{{ lang }}/result" lang="{{ lang }}" aria-label="{{ 'Українська' if lang == 'uk' else 'English' }}">{{ 'UK' if lang == 'uk' else 'EN' }}</button>{% endfor %}
+      {% else %}{% for alternate in alternates %}<a class="language {% if alternate.locale == locale %}is-active{% endif %}" href="{{ alternate.url }}" lang="{{ alternate.locale }}" aria-label="{{ alternate.name }}">{{ alternate.locale|upper }}</a>{% endfor %}{% endif %}
+    </nav>
+  </header>
+  <main id="main" class="shell" tabindex="-1">{% block content %}{% endblock %}</main>
+  <footer class="site-footer shell"><div><a class="footer-brand" href="/{{ locale }}">LifeTime</a><p>{{ t('footer_note') }}</p></div><div class="footer-links"><a href="/{{ locale }}/methodology">{{ t('methodology') }}</a><a href="/{{ locale }}/privacy">{{ t('privacy') }}</a><span>{{ t('version') }} {{ version }}</span></div></footer>
+</body>
+</html>

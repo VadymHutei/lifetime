@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-10-02T23:07:51.027106+00:00",
+  "runtime": "Python 3.14.8 / Gunicorn 2 workers x 4 threads / SQLite WAL FULL busy_timeout=250ms",
+  "clients": 20,
+  "requests": 100,
+  "path": "/en",
+  "successful_http": 100,
+  "new_recorded_events": 100,
+  "elapsed_seconds": 3.571,
+  "requests_per_second": 28.01,
+  "latency_ms_p50": 664.12,
+  "latency_ms_p95": 976.17,
+  "latency_ms_max": 1159.51,
+  "scope": "Local isolated Docker volume; short smoke envelope, not capacity guarantee"
+}

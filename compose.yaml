@@ -1,0 +1,41 @@
+services:
+  app:
+    image: ${LIFETIME_IMAGE:-lifetime:local}
+    build:
+      context: .
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      SERVICE_URL: ${SERVICE_URL:-http://127.0.0.1:8057}
+      ANALYTICS_SECRET: ${ANALYTICS_SECRET:-}
+      DB_BACKEND: ${DB_BACKEND:-mysql}
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: ${DB_NAME:-lifetime}
+      DB_USER: ${DB_USER:-lifetime}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      DB_SSL_CA: ${DB_SSL_CA:-}
+      REFERENCE_DATABASE_URL: ${REFERENCE_DATABASE_URL:-}
+      ANALYTICS_DATABASE_URL: ${ANALYTICS_DATABASE_URL:-}
+      LIFETIME_DATA_DIR: /var/lib/lifetime
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "127.0.0.1:8057:8000"
+    volumes:
+      - lifetime-data:/var/lib/lifetime
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 35s
+
+volumes:
+  lifetime-data:
