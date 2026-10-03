@@ -1,0 +1,2 @@
+{% extends 'base.html' %}
+{% block content %}<section class="error-page"><span class="error-code" aria-hidden="true">{{ status }}</span><h1>{{ t('error_title') }}</h1><p>{{ message }}</p><a class="button primary" href="/{{ locale }}">{{ t('back') }} ↗</a><div class="error-language-links"><a href="/uk" lang="uk">Українська</a><a href="/en" lang="en">English</a></div></section>{% endblock %}

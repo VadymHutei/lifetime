@@ -1,0 +1,22 @@
+{
+  "policy_version": 1,
+  "assessment_date": "2026-10-03",
+  "aggregate_definition_version": "world-bank-regions-FY2027-retrieved-2026-10-03-post-2025-07-01-reclassification",
+  "classification_note": "Operational UI grouping, not a legal assertion of sovereignty. World Bank aggregates are detected by metadata region.id=NA. Non-ISO codes must not be presented as ISO-3166 codes.",
+  "territory_codes": ["ABW", "ASM", "BMU", "CUW", "CYM", "FRO", "GIB", "GRL", "GUM", "HKG", "IMN", "MAC", "MAF", "MNP", "NCL", "PRI", "PYF", "SXM", "TCA", "VGB", "VIR"],
+  "non_iso_codes": ["CHI", "XKX"],
+  "geographic_region_codes": ["AFE", "AFR", "AFW", "EAS", "ECS", "LCN", "MEA", "NAC", "NAF", "SAS", "SSF"],
+  "default_region_codes": ["WLD", "EAS", "ECS", "LCN", "MEA", "NAC", "SAS", "SSF"],
+  "legacy_alias_overrides": {
+    "bahamas": "BHS", "bolivia": "BOL", "brunei": "BRN", "cape-verde": "CPV",
+    "congo-republic-of": "COG", "congo-democratic-republic-of-the": "COD", "egypt": "EGY",
+    "czech-republic": "CZE", "federated-states-of-micronesia": "FSM", "macau": "MAC", "palestine": "PSE",
+    "cote-d'ivoire": "CIV", "people's-republic-of-china": "CHN",
+    "gambia": "GMB", "hong-kong": "HKG", "iran": "IRN", "ivory-coast": "CIV",
+    "kyrgyzstan": "KGZ", "laos": "LAO", "moldova": "MDA", "north-korea": "PRK",
+    "russia": "RUS", "saint-kitts-and-nevis": "KNA", "saint-lucia": "LCA",
+    "saint-vincent-and-the-grenadines": "VCT", "slovakia": "SVK", "south-korea": "KOR",
+    "syria": "SYR", "timor-leste": "TLS", "turkey": "TUR", "venezuela": "VEN",
+    "vietnam": "VNM", "yemen": "YEM", "world": "WLD"
+  }
+}

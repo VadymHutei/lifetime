@@ -1,0 +1,97 @@
+{
+  "assessment_date": "2026-10-03",
+  "common_year": 2024,
+  "derived_files_sha256": {
+    "legacy_aliases.json": "b394eb2facaa18ec4eb428e48757cb2b1d32a5401b792e19db2087cacf9587c8",
+    "snapshot.json": "9d73e609f95aa09f0388c6a350ed5e03f446a2dda66bb487695c591682dd2388"
+  },
+  "legacy_input_sha256": "9c86a7fe77744d75c67d4db1584beae05fe37f7ffcf3bbf6fc7f80cb4e9a652f",
+  "policy_sha256": "4d951a887ee39b9b9eeedf6898efcfd8fb579516625929de3986a21c19ad6ea2",
+  "query_range": [
+    2020,
+    2026
+  ],
+  "raw_files": {
+    "SP.DYN.LE00.FE.IN.json": {
+      "sha256": "5e4e29267586faff1fad146440889cb824fa676aad85a84eb5b52d5c40cdc8a5",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SP.DYN.LE00.FE.IN?format=json&date=2020%3A2026&per_page=20000&source=2"
+    },
+    "SP.DYN.LE00.IN.json": {
+      "sha256": "19be3c9b22cbba7a453233aa0f98f86f0ca1437667a57e91e899d9d43e8a5784",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SP.DYN.LE00.IN?format=json&date=2020%3A2026&per_page=20000&source=2"
+    },
+    "SP.DYN.LE00.MA.IN.json": {
+      "sha256": "3f88848dc64986dd84a2309b05560ed36a90d31c905bcb5a6dfa42452200a73d",
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SP.DYN.LE00.MA.IN?format=json&date=2020%3A2026&per_page=20000&source=2"
+    },
+    "countries.json": {
+      "sha256": "4b2b4111572ec0e4c78ce3f7edd8aad47a6790c462279e66bd514cfd8824077d",
+      "url": "https://api.worldbank.org/v2/country?format=json&per_page=1000"
+    },
+    "metadata_SP.DYN.LE00.FE.IN.json": {
+      "sha256": "a7a4153f5f4eb317271a93bb8ad60f0d9a4f77c60913e5bbe5c57590b89f43f9",
+      "url": "https://api.worldbank.org/v2/indicator/SP.DYN.LE00.FE.IN?format=json&source=2&per_page=1000"
+    },
+    "metadata_SP.DYN.LE00.IN.json": {
+      "sha256": "321c62091af04f07cc57b65400ab96606e0822c6377f5135263b06959f08f399",
+      "url": "https://api.worldbank.org/v2/indicator/SP.DYN.LE00.IN?format=json&source=2&per_page=1000"
+    },
+    "metadata_SP.DYN.LE00.MA.IN.json": {
+      "sha256": "e3489e03153b2ff005c7bdc0749d5d660c9732280f994de49985a90166ed2338",
+      "url": "https://api.worldbank.org/v2/indicator/SP.DYN.LE00.MA.IN?format=json&source=2&per_page=1000"
+    }
+  },
+  "retrieved_at": "2026-10-02T22:19:01+00:00",
+  "schema_version": 1,
+  "source_release_date": "2026-07-13",
+  "statistics": {
+    "available": 792,
+    "entities": 295,
+    "entity_types": {
+      "aggregate": 78,
+      "area": 2,
+      "country": 194,
+      "territory": 21
+    },
+    "latest_non_null_year_by_sex": {
+      "female": 2024,
+      "male": 2024,
+      "total": 2024
+    },
+    "missing": 93,
+    "missing_entities": [
+      "AFR",
+      "BEA",
+      "BEC",
+      "BHI",
+      "BLA",
+      "BMN",
+      "BSS",
+      "CAA",
+      "CEA",
+      "CEU",
+      "CLA",
+      "CME",
+      "CSA",
+      "DEA",
+      "DEC",
+      "DLA",
+      "DMN",
+      "DNS",
+      "DSA",
+      "DSF",
+      "DSS",
+      "FXS",
+      "IBB",
+      "INX",
+      "MDE",
+      "NAF",
+      "NRS",
+      "NXS",
+      "RRS",
+      "SXZ",
+      "XZN"
+    ],
+    "observations": 885
+  }
+}
