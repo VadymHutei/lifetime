@@ -1,6 +1,6 @@
 # LifeTime
 
-**2.0.0** — сервіс статистики тривалості життя та порівняння з уже прожитим
+**2.1.0** — сервіс статистики тривалості життя та порівняння з уже прожитим
 часом. Flask/Jinja, адаптивні HTML/CSS, мінімальний vanilla JS. Українська та
 англійська; темний інтерфейс у стилі PassGen/GearLog. Основна форма, повторний
 розрахунок і перемикання мови працюють без JavaScript.
@@ -11,8 +11,51 @@
 
 ## Запуск
 
-Python **3.14**, цільовий контейнер — **3.14.8**. Команди нижче — PowerShell,
-із кореня repository. На Linux використовуйте `.venv/bin/python`.
+Основне сховище — **MySQL 8.4 LTS**, одна БД для окремих таблиць довідника
+та аналітики. Скопіюйте [.env.example](.env.example) у `.env` та заповніть:
+
+```dotenv
+DB_BACKEND=mysql
+DB_HOST=mysql.example.internal
+DB_PORT=3306
+DB_NAME=lifetime
+DB_USER=lifetime
+DB_PASSWORD='your-password'
+```
+
+`DB_HOST` має бути доступним із контейнера. Для MySQL на Docker host використовуйте
+`host.docker.internal`; `127.0.0.1` усередині app-контейнера означає сам app.
+Пароль із символами `$`, `#`, `@`, `/` підтримується; для `.env` використовуйте
+одинарні лапки. `.env` виключено з Git. БД та користувача створює оператор;
+міграції створюють таблиці. Production доступи можна налаштувати перед запуском.
+
+Для вже наявного MySQL сервера:
+
+```powershell
+docker compose build
+docker compose run --rm app flask --app lifetime migrate
+docker compose run --rm app flask --app lifetime import-data
+docker compose up -d --wait
+```
+
+Для локальної MySQL у Docker (заповніть `DB_PASSWORD` у `.env`):
+
+```powershell
+docker compose -f compose.yaml -f compose.mysql.yaml up -d mysql --wait
+docker compose -f compose.yaml -f compose.mysql.yaml build
+docker compose -f compose.yaml -f compose.mysql.yaml run --rm app flask --app lifetime migrate
+docker compose -f compose.yaml -f compose.mysql.yaml run --rm app flask --app lifetime import-data
+docker compose -f compose.yaml -f compose.mysql.yaml up -d --wait
+```
+
+MySQL volume зберігає БД, app volume — spool і локальний ключ аналітики.
+Локальна MySQL не публікує порт на host. Облікові дані локального сервера
+ініціалізуються лише на порожньому volume; редагування `.env` не змінює
+пароль уже створеного MySQL account.
+
+Python **3.14**, цільовий контейнер — **3.14.8**. Для нативного запуску задайте
+ті самі `DB_*` у середовищі процесу: Flask самостійно не читає `.env`.
+Команди нижче — PowerShell; на Linux використовуйте `.venv/bin/python`.
 
 ```powershell
 python -m venv .venv
@@ -23,29 +66,28 @@ $env:SERVICE_URL = 'http://127.0.0.1:8057'
 .venv\Scripts\python -m flask --app lifetime run --host 127.0.0.1 --port 8057
 ```
 
-Відкрийте <http://127.0.0.1:8057/uk>. `migrate` створює дві БД у `instance/`,
+Відкрийте <http://127.0.0.1:8057/uk>. `migrate` застосовує обидві схеми таблиць,
 `import-data` перевіряє snapshot і активує його. HTTP-запити не виконують
 міграцій, імпорту чи зовнішніх API-запитів. Повторний імпорт ідемпотентний.
 Flask dev server призначений для локальної розробки; його стандартний access
 log може містити query strings legacy-запитів, тому не використовуйте його
 як публічний production server.
 
-```powershell
-docker compose build
-docker compose run --rm app flask --app lifetime migrate
-docker compose run --rm app flask --app lifetime import-data
-docker compose up -d
-```
-
-Контейнер запускає Gunicorn від непривілейованого користувача. Дані зберігаються
-в локальному persistent volume. Порт доступний лише через loopback.
-Конфігурація — environment; Flask самостійно не читає `.env`. Compose читає
-значення `.env` для підстановки; приклад — [.env.example](.env.example).
+Контейнер запускає Gunicorn від непривілейованого користувача. HTTP-порт
+доступний лише через loopback. Compose читає `.env`.
 Для production потрібні HTTPS `SERVICE_URL`, довгий `ANALYTICS_SECRET`,
 налаштований reverse proxy та точні trusted proxy CIDRs.
 
 Повні інструкції запуску, backup/restore, rollback, retention та edge ingestion —
-[OPERATIONS.md](docs/OPERATIONS.md).
+[OPERATIONS.md](docs/OPERATIONS.md) і [MYSQL.md](docs/MYSQL.md).
+`DB_SSL_CA` вмикає TLS із перевіркою сертифіката та hostname; CA потрібно
+змонтувати до контейнера read-only. За потреби можна задати окремі
+`REFERENCE_DATABASE_URL` і `ANALYTICS_DATABASE_URL`.
+
+SQLite залишається явним локальним варіантом: `DB_BACKEND=sqlite` створює
+дві БД у `instance/` (у контейнері — `/var/lib/lifetime`). Перехід на MySQL
+не переносить існуючі SQLite logs автоматично; вони залишаються у старому
+volume, а довідник імпортується з перевіреного dataset bundle.
 
 ## Дані й оновлення
 
@@ -81,7 +123,7 @@ aliases та сім оригінальних API responses. Повний наб�
 
 ## Аналітика й приватність
 
-Окрема SQLite БД зберігає HTTP-події: успішні запити, redirects, static, HEAD
+Окремі таблиці аналітики зберігають HTTP-події: успішні запити, redirects, static, HEAD
 і помилки. Validity, client class, security class та HTTP outcome — незалежні
 ознаки. Browser UA не доводить, що це людина; crawler UA означає лише
 `claimed_bot`. Автоматичного блокування чи перевірки crawler через мережу немає.
@@ -124,6 +166,10 @@ capture, dedup і ротація описані в operations. Публічно�
 
 ## Перевірки й структура
 
+Для MySQL integration tests задайте `TEST_MYSQL_URL` лише до disposable БД
+`lifetime_test` із правами створення окремих QA databases. Без цієї змінної
+MySQL тести пропускаються; production URL для тестів не використовуйте.
+
 ```powershell
 .venv\Scripts\python -m pytest -q
 .venv\Scripts\python -m ruff check lifetime migrations scripts tests
@@ -138,5 +184,6 @@ git diff --check
 
 Контракти: [AGENTS](AGENTS.md), [план](docs/V2_PLAN.md),
 [архітектура](docs/ARCHITECTURE.md), [дизайн](docs/DESIGN_BRIEF.md),
-[залежності](docs/DEPENDENCIES.md), [результати перевірок](docs/VALIDATION.md).
+[залежності](docs/DEPENDENCIES.md), [перевірки 2.1.0](docs/MYSQL_VALIDATION.md),
+[перевірки 2.0.0](docs/VALIDATION.md).
 Код — [MIT](LICENSE). Дані мають окрему ліцензію джерела.

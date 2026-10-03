@@ -79,12 +79,19 @@ def register_cli(app):
     @click.argument("destination", type=click.Path(path_type=Path))
     def backup(destination):
         """Create consistent SQLite backups, including committed WAL contents."""
+        engines = [app.extensions[f"{name}_engine"] for name in ("reference", "analytics")]
+        # Validate every source before creating any output, including mixed profiles.
+        if any(engine.dialect.name != "sqlite" for engine in engines):
+            raise click.ClickException(
+                "flask backup supports SQLite only. Use the official mysqldump backup/restore "
+                "workflow in docs/MYSQL.md for MySQL; no destination was created."
+            )
+        if any(not engine.url.database or engine.url.database == ":memory:" for engine in engines):
+            raise click.ClickException("This backup command requires file-based SQLite databases")
         destination = destination.resolve()
         destination.mkdir(parents=True, exist_ok=False)
         for name in ("reference", "analytics"):
             engine = app.extensions[f"{name}_engine"]
-            if engine.dialect.name != "sqlite" or not engine.url.database:
-                raise click.ClickException("This backup command requires file-based SQLite databases")
             with closing(sqlite3.connect(engine.url.database)) as source:
                 with closing(sqlite3.connect(destination / f"{name}.sqlite3")) as target:
                     source.backup(target)

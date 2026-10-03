@@ -1,0 +1,29 @@
+# Optional local MySQL. Production can use compose.yaml with an external server.
+services:
+  app:
+    environment:
+      DB_BACKEND: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+  mysql:
+    image: mysql:8.4@sha256:6ea90827b1100f8f2ae306a539f86d2c264a26ed435a2a9f75551dd5c3aeb242
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-lifetime}
+      MYSQL_USER: ${DB_USER:-lifetime}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in your local .env}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_bin"]
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+    restart: unless-stopped
+volumes:
+  mysql-data:

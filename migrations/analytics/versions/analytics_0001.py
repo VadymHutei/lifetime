@@ -42,6 +42,9 @@ def upgrade():
         sa.Column("ruleset_version", sa.String(24), nullable=False),
         sa.Column("confidence", sa.Float(), nullable=False),
         sa.Column("flags", sa.JSON(), nullable=False),
+        mysql_engine="InnoDB",
+        mysql_charset="utf8mb4",
+        mysql_collate="utf8mb4_bin",
     )
     for name, columns in (
         ("ix_events_timestamp", ["timestamp"]),
@@ -60,6 +63,9 @@ def upgrade():
         sa.Column("security_class", sa.String(24), primary_key=True),
         sa.Column("outcome", sa.String(24), primary_key=True),
         sa.Column("count", sa.Integer(), nullable=False),
+        mysql_engine="InnoDB",
+        mysql_charset="utf8mb4",
+        mysql_collate="utf8mb4_bin",
     )
     views = {
         "valid_requests": "validity = 'valid'",

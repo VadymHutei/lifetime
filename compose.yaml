@@ -10,7 +10,18 @@ services:
       ENVIRONMENT: ${ENVIRONMENT:-development}
       SERVICE_URL: ${SERVICE_URL:-http://127.0.0.1:8057}
       ANALYTICS_SECRET: ${ANALYTICS_SECRET:-}
+      DB_BACKEND: ${DB_BACKEND:-mysql}
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: ${DB_NAME:-lifetime}
+      DB_USER: ${DB_USER:-lifetime}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      DB_SSL_CA: ${DB_SSL_CA:-}
+      REFERENCE_DATABASE_URL: ${REFERENCE_DATABASE_URL:-}
+      ANALYTICS_DATABASE_URL: ${ANALYTICS_DATABASE_URL:-}
       LIFETIME_DATA_DIR: /var/lib/lifetime
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "127.0.0.1:8057:8000"
     volumes:

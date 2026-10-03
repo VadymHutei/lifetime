@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-10-03T00:24:49.913051+00:00",
+  "server_client": "mysql  Ver 8.4.11 for Linux on x86_64 (MySQL Community Server - GPL)",
+  "backup_tool": "official mysqldump inside disposable MySQL8.4 QA container",
+  "backup_options": [
+    "--single-transaction",
+    "--no-tablespaces",
+    "--set-gtid-purged=OFF"
+  ],
+  "source_isolated": true,
+  "restore_new_database": true,
+  "restored_public_locations": 225,
+  "restored_observations": 885,
+  "active_dataset_id": "f1087cd51f3d16450ec98242e9c4b7d7704d224b883d3ec2b78b01a25c63012b",
+  "sanitized_event_id_preserved": true,
+  "view_counts_before_http": {
+    "valid_requests": 1,
+    "bot_requests": 0,
+    "invalid_requests": 0,
+    "suspicious_requests": 0
+  },
+  "views_reference_restored_schema": true,
+  "readiness_http": 200,
+  "result_post_http": 200,
+  "credentials_not_in_arguments_or_artifact": true,
+  "disposable_databases_removed": true
+}

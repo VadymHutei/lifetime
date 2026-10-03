@@ -1,6 +1,7 @@
 """Short SQL transactions with a durable, process-safe disk fallback."""
 
 from datetime import datetime, timedelta, timezone
+from collections import Counter
 import json
 import os
 from pathlib import Path
@@ -87,7 +88,9 @@ class AnalyticsStore:
                 return "inserted"
             except IntegrityError:
                 current = (
-                    connection.execute(select(events).where(events.c.event_id == event["event_id"]))
+                    connection.execute(
+                        select(events).where(events.c.event_id == event["event_id"]).with_for_update()
+                    )
                     .mappings()
                     .first()
                 )
@@ -238,8 +241,9 @@ class AnalyticsStore:
             self._purge_database(event_cutoff, raw_cutoff, aggregate_cutoff, result)
         except Exception:
             result["database_failed"] = 1
-            # SQL transaction rolled back; do not report tentative deletion counts.
-            result.update(events=0, raw_ips=0, aggregates=0)
+            # Bounded batches already committed remain counted. The final
+            # maintenance transaction may have rolled back tentative counts.
+            result.update(raw_ips=0, aggregates=0)
             self._signal("database_retention_failed")
         # Retention also applies to durable files during a DB outage. Replay is
         # not required to remove stale detailed/raw data.
@@ -275,32 +279,55 @@ class AnalyticsStore:
         return result
 
     def _purge_database(self, event_cutoff, raw_cutoff, aggregate_cutoff, result):
+        # Lock a bounded set first. Under READ COMMITTED a backdated replay can
+        # insert between aggregate SELECT and DELETE; deleting only selected
+        # ids avoids losing its count. Concurrent MySQL purgers skip owned rows.
+        dimensions = ("validity", "client_class", "security_class", "outcome")
+        while True:
+            with self.engine.begin() as connection:
+                rows = (
+                    connection.execute(
+                        select(events.c.event_id, events.c.timestamp, *(events.c[key] for key in dimensions))
+                        .where(events.c.timestamp < event_cutoff)
+                        .order_by(events.c.timestamp, events.c.event_id)
+                        .limit(1000)
+                        .with_for_update(skip_locked=True)
+                    )
+                    .mappings()
+                    .all()
+                )
+                if not rows:
+                    break
+                if self.aggregate_days:
+                    counts = Counter(
+                        (row["timestamp"][:10], *(row[key] for key in dimensions))
+                        for row in rows
+                        if row["timestamp"][:10] >= aggregate_cutoff
+                    )
+                    # Stable aggregate-lock order avoids cross-group deadlocks.
+                    for values, count in sorted(counts.items()):
+                        keys = dict(zip(("day", *dimensions), values))
+                        if connection.dialect.name == "mysql":
+                            from sqlalchemy.dialects.mysql import insert as mysql_insert
+
+                            # Native upsert takes an exclusive lock directly;
+                            # duplicate INSERT followed by UPDATE can deadlock
+                            # when two purgers first acquire shared key locks.
+                            statement = mysql_insert(daily).values(**keys, count=count)
+                            connection.execute(statement.on_duplicate_key_update(count=daily.c.count + count))
+                            continue
+                        where = and_(*(daily.c[key] == value for key, value in keys.items()))
+                        try:
+                            with connection.begin_nested():
+                                connection.execute(insert(daily).values(**keys, count=count))
+                        except IntegrityError:
+                            # Atomic arithmetic, never a stale SELECT + assign.
+                            connection.execute(update(daily).where(where).values(count=daily.c.count + count))
+                deleted = connection.execute(
+                    delete(events).where(events.c.event_id.in_([row["event_id"] for row in rows]))
+                ).rowcount
+            result["events"] += deleted
         with self.engine.begin() as connection:
-            # Fold only rows about to expire, once, in the same transaction as
-            # deletion. This preserves earlier counts across repeated purges.
-            day = func.substr(events.c.timestamp, 1, 10)
-            dimensions = [events.c.validity, events.c.client_class, events.c.security_class, events.c.outcome]
-            expired = events.c.timestamp < event_cutoff
-            if self.aggregate_days:
-                rows = connection.execute(
-                    select(day.label("day"), *dimensions, func.count().label("count"))
-                    .where(expired)
-                    .group_by(day, *dimensions)
-                ).mappings()
-                for row in rows:
-                    if row["day"] < aggregate_cutoff:
-                        continue
-                    keys = {
-                        key: row[key]
-                        for key in ("day", "validity", "client_class", "security_class", "outcome")
-                    }
-                    where = and_(*(daily.c[key] == value for key, value in keys.items()))
-                    found = connection.execute(select(daily.c.count).where(where)).scalar_one_or_none()
-                    if found is None:
-                        connection.execute(insert(daily).values(**dict(row)))
-                    else:
-                        connection.execute(update(daily).where(where).values(count=found + row["count"]))
-            result["events"] = connection.execute(delete(events).where(expired)).rowcount
             result["raw_ips"] = connection.execute(
                 update(events)
                 .where(events.c.raw_ip.is_not(None), events.c.timestamp < raw_cutoff)

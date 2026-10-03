@@ -4,7 +4,7 @@
 
 - Спілкуйся з користувачем українською. Працюй у цьому repository; PassGen/GearLog — read-only референси, якщо немає окремого запиту на їх зміну.
 - Прямі вимоги користувача мають пріоритет. Контракт підготовки: `docs/V2_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN_BRIEF.md`, `docs/DATA_SOURCES.md`, `docs/DEPENDENCIES.md` та README.
-- Реалізовано `2.0.0`: runtime у `lifetime/`, міграції у `migrations/`, запуск/операції — README та `docs/OPERATIONS.md`, докази перевірок — `docs/VALIDATION.md`. Legacy живе в `app/`, кореневих SQL та `db/` і не входить у runtime image.
+- Реалізовано `2.1.0` із MySQL за прямим запитом користувача: runtime у `lifetime/`, міграції у `migrations/`, запуск/операції — README, `docs/OPERATIONS.md`, `docs/MYSQL.md`; перевірки — `docs/VALIDATION.md` та `docs/MYSQL_VALIDATION.md`. Legacy живе в `app/`, кореневих SQL та `db/` і не входить у runtime image.
 - Перед змінами перевіряй `git status`; не стирай роботу користувача/інших агентів. Нові гілки, якщо потрібні, — `codex/<topic>`. Не створюй release tag до готовності релізу.
 
 ## Продукт та інтерфейс
@@ -19,7 +19,8 @@
 
 - Новий пакет — `lifetime/` із `create_app()`, services, repositories, routes, analytics, templates/static та CLI. Доменні розрахунки не залежать від Flask, SQL чи мережі.
 - Clock / today передавай явно; «сьогодні» — Europe/Kyiv, часові мітки журналу — UTC. Використовуй календарні дати, а не сталий 31-денний місяць.
-- SQLAlchemy Core + Alembic; початковий single-host профіль — дві SQLite БД (reference/analytics), WAL, короткі транзакції та bounded timeout. Міграції/імпорт — окремий CLI, не при import модуля або HTTP-запиті.
+- SQLAlchemy Core + Alembic + PyMySQL; основний профіль — MySQL 8.4 LTS, одна БД, окремі reference/analytics таблиці та migration version tables, незалежні pools. InnoDB, utf8mb4, READ COMMITTED, короткі транзакції й bounded timeouts. SQLite — явна локальна сумісність через DB_BACKEND=sqlite (дві БД/WAL). Міграції/імпорт — окремий CLI, не при import модуля або HTTP-запиті.
+- MySQL fields DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASSWORD складаються через URL.create, не string interpolation. Секрети не друкуй. DB_SSL_CA вмикає перевірений TLS; не вимикай перевірку сертифіката. MySQL тести працюють лише через TEST_MYSQL_URL із disposable lifetime_test, не production.
 - Переклади — version-controlled файли. Не відновлюй `/translations` з admin_key у query чи мутації через GET.
 - Параметризований SQL, allowlist для dynamic order/identifier, explicit transaction ownership. Тести використовують окремі тимчасові БД, ніколи production.
 - Залежності перевіряй за офіційними stable-релізами, фіксуй resolver/lock після чистого встановлення. Не підміняй lock таблицею версій із документації. Точний baseline — DEPENDENCIES.
@@ -49,7 +50,7 @@
 - Sitemap містить лише indexable canonical 200 URL й реальний lastmod. Result/error/retired routes — noindex; noindex не підміняється robots Disallow.
 - `/ukr`/`eng` public → відповідні uk/en 301, `/rus/**` → 410 із доступними мовами; legacy result окремо. Не перенаправляй невідомі країни на world мовчки.
 - `VERSION` — єдине джерело SemVer, у тому числі prep prerelease. Footer, CLI, package metadata, JSON-LD і telemetry читають його. Dataset має незалежну версію.
-- Фінальний `2.0.0` і annotated Git tag `v2.0.0` — лише після acceptance, на release commit. Підтримуй CHANGELOG. Push/deployment — у межах запиту користувача.
+- Фінальні SemVer-релізи й annotated Git tags `vMAJOR.MINOR.PATCH` — лише після acceptance, на release commit. Підтримуй CHANGELOG. Push/deployment — у межах запиту користувача.
 
 ## Сабагенти
 
