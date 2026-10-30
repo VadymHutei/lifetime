@@ -1,0 +1,92 @@
+# Standalone VPS deployment. Run from /opt/lifetime with --env-file .env.
+name: lifetime
+services:
+  app:
+    image: ${LIFETIME_IMAGE:?Set immutable release image}
+    build:
+      context: ..
+    environment:
+      ENVIRONMENT: production
+      SERVICE_URL: https://lifetime.ukubuka.net
+      DB_BACKEND: mysql
+      DB_HOST: mysql
+      DB_NAME: lifetime
+      DB_USER: lifetime
+      DB_PASSWORD: ${DB_PASSWORD:?Required}
+      ANALYTICS_SECRET: ${ANALYTICS_SECRET:?Required}
+      ANALYTICS_STORE_RAW_IP: "false"
+      TRUSTED_PROXY_CIDRS: 172.30.57.2/32
+      LIFETIME_DATA_DIR: /var/lib/lifetime
+    volumes:
+      - ../state:/var/lib/lifetime
+      - ../edge:/var/lib/lifetime/edge:ro
+    networks: [frontend, backend]
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 320m
+    cpus: 1.0
+    stop_grace_period: 35s
+    logging: &logging
+      driver: json-file
+      options: {max-size: 5m, max-file: "3"}
+  mysql:
+    image: mysql:8.4@sha256:6ea90827b1100f8f2ae306a539f86d2c264a26ed435a2a9f75551dd5c3aeb242
+    environment:
+      MYSQL_DATABASE: lifetime
+      MYSQL_USER: lifetime
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Required}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Required}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_bin
+      - --innodb-buffer-pool-size=128M
+      - --max-connections=40
+      - --performance-schema=OFF
+    volumes: [mysql-data:/var/lib/mysql]
+    networks: [backend]
+    restart: unless-stopped
+    mem_limit: 640m
+    cpus: 1.0
+    healthcheck:
+      test: [CMD, mysqladmin, ping, -h, 127.0.0.1, --silent]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+      start_period: 30s
+    logging: *logging
+  proxy:
+    image: ${NGINX_IMAGE:?Set pinned nginx image}
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ../proxy:/etc/nginx/conf.d:ro
+      - ../certificates:/etc/letsencrypt:ro
+      - ../acme:/var/www/acme:ro
+      - ../edge:/var/log/lifetime
+    networks:
+      frontend:
+        ipv4_address: 172.30.57.2
+    restart: unless-stopped
+    mem_limit: 64m
+    cpus: 0.5
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD-SHELL, "wget -q -O /dev/null http://127.0.0.1/proxy-health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    logging: *logging
+volumes:
+  mysql-data:
+networks:
+  frontend:
+    ipam:
+      config: [{subnet: 172.30.57.0/24}]
+  backend:
+    internal: true

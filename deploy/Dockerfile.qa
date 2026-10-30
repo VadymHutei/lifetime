@@ -1,0 +1,14 @@
+ARG RUNTIME_IMAGE=lifetime:2.1.0-vps-20261031
+FROM ${RUNTIME_IMAGE}
+USER root
+COPY requirements-dev-lock.txt /qa/requirements-dev-lock.txt
+RUN python -m venv /qa/.venv \
+    && /qa/.venv/bin/python -m pip install --no-cache-dir --require-hashes -r /qa/requirements-dev-lock.txt \
+    && /qa/.venv/bin/python -m pip check
+COPY tests /app/tests
+COPY scripts /app/scripts
+COPY pyproject.toml /app/pyproject.toml
+RUN chown -R 10001:10001 /app /qa
+USER 10001:10001
+ENTRYPOINT []
+CMD ["/qa/.venv/bin/python", "-m", "pytest", "-q"]

@@ -139,6 +139,30 @@ dmypy.json
 .pyre/
 
 # LifeTime 2 runtime and local QA artifacts
+# IDE and operating-system metadata
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Deployment secrets, generated state and transfer artifacts
+.env.*
+!.env.example
+.qa-*.env
+.restore-*.env
+/state/
+/edge/
+/certificates/
+/acme/
+/proxy/
+/backups/
+/.initialized
+/source.tgz
+/.artifacts-*
+/kyiv-alert-before.txt
+/kyiv-alert-after.txt
+
 *.sqlite3
 *.sqlite3-wal
 *.sqlite3-shm

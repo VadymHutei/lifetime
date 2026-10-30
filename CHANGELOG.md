@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Додано окреме VPS-розгортання LifeTime: приватні MySQL/app, HTTPS proxy,
+  автоматичні backup/retention/TLS jobs та перевірку відновлення.
+- Збережено документацію production і альтернативні шаблони nexus.
+- Виключено з Git файли IDE, deployment secrets і згенеровані артефакти.
+
 ## 2.1.0 — 2026-10-03
 
 - MySQL 8.4 LTS став основним сховищем: одна БД для довідника та аналітики, окремі таблиці й migration histories.

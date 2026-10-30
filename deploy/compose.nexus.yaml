@@ -1,0 +1,26 @@
+# Use from the repository root with -f compose.yaml -f deploy/compose.nexus.yaml.
+# Requires Compose 2.24.4+; see docs/NEXUS_DEPLOYMENT.md before deployment.
+services:
+  app:
+    environment:
+      ENVIRONMENT: production
+      SERVICE_URL: ${SERVICE_URL:-https://lifetime.ukubuka.net}
+      DB_HOST: ${DB_HOST:-mysql}
+    ports: !reset []
+    extra_hosts: !reset []
+    volumes: !override
+      - /srv/data/lifetime/state:/var/lib/lifetime
+      - /srv/data/proxy/logs/lifetime:/var/lib/lifetime/edge:ro
+    networks:
+      home_proxy:
+        aliases:
+          - lifetime
+      home_data: {}
+
+networks:
+  home_proxy:
+    external: true
+    name: home_proxy
+  home_data:
+    external: true
+    name: home_data

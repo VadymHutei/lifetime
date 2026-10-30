@@ -80,6 +80,10 @@ log може містити query strings legacy-запитів, тому не �
 
 Повні інструкції запуску, backup/restore, rollback, retention та edge ingestion —
 [OPERATIONS.md](docs/OPERATIONS.md) і [MYSQL.md](docs/MYSQL.md).
+Поточний production `https://lifetime.ukubuka.net` працює на окремому VPS:
+конфігурація, перевірки та обслуговування — [VPS_DEPLOYMENT.md](docs/VPS_DEPLOYMENT.md).
+Попередній план розгортання на nexus та його шаблони збережено як альтернативу —
+[NEXUS_DEPLOYMENT.md](docs/NEXUS_DEPLOYMENT.md).
 `DB_SSL_CA` вмикає TLS із перевіркою сертифіката та hostname; CA потрібно
 змонтувати до контейнера read-only. За потреби можна задати окремі
 `REFERENCE_DATABASE_URL` і `ANALYTICS_DATABASE_URL`.

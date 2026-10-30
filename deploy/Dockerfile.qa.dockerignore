@@ -1,0 +1,9 @@
+**
+!requirements-dev-lock.txt
+!pyproject.toml
+!tests/
+!tests/**
+!scripts/
+!scripts/**
+**/__pycache__/
+**/*.pyc
