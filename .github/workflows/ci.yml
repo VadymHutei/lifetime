@@ -35,7 +35,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping --silent"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
           --health-interval=5s --health-timeout=3s --health-retries=30
     env:
       TEST_MYSQL_URL: mysql+pymysql://root:lifetime-ci-only@127.0.0.1:3306/lifetime_test

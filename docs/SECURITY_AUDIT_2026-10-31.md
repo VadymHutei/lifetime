@@ -113,6 +113,9 @@ observations перевіряються для active dataset, а не для в
 Після початкового pinning також перевірено та прийнято останні stable CI
 actions: checkout v7.0.1, setup-python v7.1.0, upload-artifact v7.0.2;
 усі зафіксовано повними SHA офіційних release tags.
+Фінальний CI також виявив startup race: Unix-socket mysqladmin ping міг
+побачити тимчасовий initialization server до відкриття TCP. Local Compose
+і CI healthcheck переведено на 127.0.0.1/TCP; VPS healthcheck уже був TCP.
 
 Atomic force-push із точними `--force-with-lease` оновив **11 remote-гілок**,
 включно з default `master` і `codex/vps-deployment`. Локальні annotated
