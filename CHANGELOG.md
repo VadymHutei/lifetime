@@ -14,6 +14,10 @@
 - Backup перед upgrade підтримує `BACKUP_PRUNE=false` для збереження всіх копій.
 - Docker image нормалізує права public runtime каталогів після COPY;
   QA не маскує їх recursive chown, перевірено запуск від непривілейованого user.
+- Restore acceptance перевіряє активну ревізію dataset і підтримує збережену
+  історію; backup після upgrade також успішно відновлено ізольовано.
+- CI actions оновлено до stable checkout 7.0.1, setup-python 7.1.0,
+  upload-artifact 7.0.2 із immutable SHA pinning.
 
 - Додано окреме VPS-розгортання LifeTime: приватні MySQL/app, HTTPS proxy,
   автоматичні backup/retention/TLS jobs та перевірку відновлення.

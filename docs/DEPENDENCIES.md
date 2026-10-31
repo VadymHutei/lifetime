@@ -22,6 +22,8 @@ PyMySQL 1.2.3, cryptography 50.0.2, Werkzeug 3.1.9 та Jinja2 3.1.6
 advisories. Обидва повторні `pip-audit` — без відомих вразливостей.
 Локальний Python 3.14.3 не оновлювався; release перевіряється окремо в Linux
 Python 3.14.10. Деталі — [звіт аудиту](SECURITY_AUDIT_2026-10-31.md).
+CI також використовує офіційні stable checkout v7.0.1, setup-python v7.1.0,
+upload-artifact v7.0.2, зафіксовані повними commit SHA.
 
 ## Початковий baseline 2.1.0 (історичний)
 

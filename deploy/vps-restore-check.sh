@@ -34,11 +34,17 @@ import json
 from sqlalchemy import text
 from lifetime import create_app
 app = create_app()
+active = app.extensions['reference'].active_dataset()
+assert active is not None
 with app.extensions['reference_engine'].connect() as conn:
     assert conn.scalar(text('SELECT DATABASE()')) == 'lifetime_restore'
     assert conn.scalar(text('SELECT version_num FROM alembic_reference_version')) == 'reference_0002'
     assert conn.scalar(text('SELECT version_num FROM alembic_version')) == 'analytics_0003'
-    assert conn.scalar(text('SELECT COUNT(*) FROM life_expectancy')) == 885
+    observations = conn.scalar(
+        text('SELECT COUNT(*) FROM life_expectancy WHERE dataset_id = :dataset_id'),
+        {'dataset_id': active['id']},
+    )
+    assert observations == 885
 assert len(app.extensions['reference'].list_locations('uk')) == 225
 assert app.extensions['reference'].get_location('WLD')['values']['total'] == 73.4818184164654
 client = app.test_client()
@@ -47,6 +53,6 @@ assert client.get('/uk').status_code == 200
 assert client.post('/uk/result', data={'birth_date':'2000-01-01','country':'UKR','sex':'total'}).status_code == 200
 assert app.extensions['analytics'].report('overview')['total'] > 0
 assert app.extensions['analytics'].replay()['failed'] == 0
-print(json.dumps({'restore':'passed','observations':885,'public_locations':225,'active_dataset':app.extensions['reference'].active_dataset()['id']}, default=str))
+print(json.dumps({'restore':'passed','observations':observations,'public_locations':225,'active_dataset':active['id']}, default=str))
 PY
 printf 'Restored backup successfully: %s\n' "$backup"

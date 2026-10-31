@@ -102,6 +102,17 @@ edge import перевірено: 16 request IDs → 16 events, privacy passed, 
 порожній. Raw IP/DOB/синтетичного секрету у журналах немає.
 Kyiv Alert: той самий container ID, StartedAt і RestartCount 0, healthy.
 Maintenance timers повернуті в active; секрети й чужі volumes не змінювалися.
+Фактичний r2 image ID:
+`sha256:cc423dc9c0ff7b0a39d5cb9057d95ab3bc77e3bb712263ffc86711e4c218a82d`.
+Повторний backup після upgrade — `/opt/lifetime/backups/20261031T002008-53402`;
+isolated restore на MySQL 8.4.13 також passed із новою активною ревізією.
+Restore-check виправлено для багатьох збережених dataset revisions: 885
+observations перевіряються для active dataset, а не для всієї history table.
+Зовнішні HTTPS readiness і POST із комп'ютера оператора — passed.
+
+Після початкового pinning також перевірено та прийнято останні stable CI
+actions: checkout v7.0.1, setup-python v7.1.0, upload-artifact v7.0.2;
+усі зафіксовано повними SHA офіційних release tags.
 
 Atomic force-push із точними `--force-with-lease` оновив **11 remote-гілок**,
 включно з default `master` і `codex/vps-deployment`. Локальні annotated
