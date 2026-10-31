@@ -17,6 +17,9 @@ COPY VERSION /app/VERSION
 COPY lifetime /app/lifetime
 COPY migrations /app/migrations
 COPY data/life_expectancy /app/data/life_expectancy
+# Source archives can be extracted with umask 077. Normalize public runtime
+# permissions explicitly so the non-root user can traverse nested packages.
+RUN chmod -R u=rwX,go=rX /app/lifetime /app/migrations /app/data
 
 USER 10001:10001
 EXPOSE 8000

@@ -12,6 +12,8 @@
 - Додано privacy guard, Gitleaks і dev dependency audit у CI, Dependabot;
   CI actions зафіксовано commit SHA. Небезпечний legacy requirements вилучено.
 - Backup перед upgrade підтримує `BACKUP_PRUNE=false` для збереження всіх копій.
+- Docker image нормалізує права public runtime каталогів після COPY;
+  QA не маскує їх recursive chown, перевірено запуск від непривілейованого user.
 
 - Додано окреме VPS-розгортання LifeTime: приватні MySQL/app, HTTPS proxy,
   автоматичні backup/retention/TLS jobs та перевірку відновлення.

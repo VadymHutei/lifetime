@@ -1,15 +1,15 @@
-ARG RUNTIME_IMAGE=lifetime:2.1.1-security-20261031
+ARG RUNTIME_IMAGE=lifetime:2.1.1-security-20261031-r2
 FROM ${RUNTIME_IMAGE}
 USER root
 COPY requirements-dev-lock.txt /qa/requirements-dev-lock.txt
 RUN python -m venv /qa/.venv \
     && /qa/.venv/bin/python -m pip install --no-cache-dir --require-hashes -r /qa/requirements-dev-lock.txt \
     && /qa/.venv/bin/python -m pip check
-COPY tests /app/tests
-COPY scripts /app/scripts
+COPY --chown=10001:10001 tests /app/tests
+COPY --chown=10001:10001 scripts /app/scripts
 COPY pyproject.toml /app/pyproject.toml
 COPY db_data.sql /app/db_data.sql
-RUN chown -R 10001:10001 /app /qa
+RUN chown 10001:10001 /app
 USER 10001:10001
 ENTRYPOINT []
 CMD ["/qa/.venv/bin/python", "-m", "pytest", "-q"]

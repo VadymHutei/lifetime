@@ -7,7 +7,7 @@ mysql_image='mysql:8.4@sha256:a0225d1ea6631c8bc2385dc4c2faba17bbf1834ecf369e1659
 password=$(openssl rand -hex 32)
 printf 'MYSQL_ROOT_PASSWORD=%s\nMYSQL_ROOT_HOST=%%\nMYSQL_DATABASE=lifetime_test\n' "$password" > .qa-mysql.env
 printf 'TEST_MYSQL_URL=mysql+pymysql://root:%s@lifetime-qa-mysql:3306/lifetime_test?charset=utf8mb4\n' "$password" > .qa-app.env
-runtime_image=${RUNTIME_IMAGE:-lifetime:2.1.1-security-20261031}
+runtime_image=${RUNTIME_IMAGE:-lifetime:2.1.1-security-20261031-r2}
 docker build -f deploy/Dockerfile.qa --build-arg RUNTIME_IMAGE="$runtime_image" -t lifetime:qa-security-20261031 .
 docker network create lifetime_qa
 cleanup() {

@@ -15,6 +15,7 @@ Docker/Compose/CI та фактичну production конфігурацію VPS.
 | Застарілий Python image | Runtime 3.14.8; 3.14.10 є security release. | Python 3.14.10-slim із verified immutable digest; MySQL також оновлено в межах LTS до 8.4.13. |
 | Непідтримуваний legacy dependency manifest | `app/requirements.txt` пропонував Flask 1.1.1, старі Jinja2/PyMySQL/Werkzeug тощо, хоча `app/` не розгортається. | Manifest вилучено, `app/README.md` явно забороняє запуск legacy. Підтримуваний runtime описано тільки в root pyproject/locks. |
 | Неповна CI перевірка supply chain | CI аудіював лише runtime, actions були mutable tags. | Audit обох locks, Gitleaks із checksum і redaction, tracked-file privacy guard, tests, Dependabot; actions pinned commit SHA. |
+| Неправильні права вкладених каталогів image | Whitelist archive, розпакований з umask 077, давав root-owned 0700 каталоги. QA через recursive chown маскував їхню недоступність runtime user. | Dockerfile явно нормалізує тільки public runtime files/directories через `u=rwX,go=rX`; QA більше не змінює runtime ownership. Перед deploy перевіряється factory і повний snapshot від non-root без network. |
 
 Advisories dev lock: certifi
 [GHSA-6q48-6c7w-9gw2](https://github.com/advisories/GHSA-6q48-6c7w-9gw2),
