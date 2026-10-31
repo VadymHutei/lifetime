@@ -1,0 +1,14 @@
+[Unit]
+Description=LifeTime private MySQL connection proxy
+Requires=docker.service
+After=docker.service
+
+[Service]
+ExecStart=/bin/bash /opt/lifetime/deploy/vps-db-proxy.sh
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+RestrictAddressFamilies=AF_INET AF_UNIX
+Restart=on-failure
+RestartSec=2

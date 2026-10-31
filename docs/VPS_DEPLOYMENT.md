@@ -12,6 +12,8 @@ SSH — `ssh codex-vps`, користувач `codex`, адміністрати�
   його не треба об’єднувати з кореневим Compose або nexus overlay.
 - Контейнери — `lifetime-app-1`, `lifetime-mysql-1`, `lifetime-proxy-1`.
 - Назовні відкриті лише 80/443; app:8000 і MySQL:3306 не опубліковані.
+- Для локального DB-клієнта налаштовано окремий account і SSH-доступ
+  через loopback `127.0.0.1:3307`: [DATABASE_ACCESS.md](DATABASE_ACCESS.md).
 - Власні мережі `lifetime_frontend` (172.30.57.0/24) і внутрішня
   `lifetime_backend`; жодного приєднання до мережі kyiv-alert.
 - IP proxy `172.30.57.2`; застосунок довіряє лише цьому `/32`.

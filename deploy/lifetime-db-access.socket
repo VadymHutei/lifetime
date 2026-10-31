@@ -1,0 +1,9 @@
+[Unit]
+Description=LifeTime MySQL endpoint for SSH tunnels (loopback only)
+
+[Socket]
+ListenStream=127.0.0.1:3307
+NoDelay=true
+
+[Install]
+WantedBy=sockets.target

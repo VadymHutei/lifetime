@@ -162,6 +162,8 @@ Thumbs.db
 /.artifacts-*
 /kyiv-alert-before.txt
 /kyiv-alert-after.txt
+/.desktop-client.cnf
+/.desktop-account-host
 
 *.sqlite3
 *.sqlite3-wal
