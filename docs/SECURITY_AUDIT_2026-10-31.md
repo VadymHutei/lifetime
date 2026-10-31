@@ -111,6 +111,10 @@ Atomic force-push із точними `--force-with-lease` оновив **11 rem
 Перевірено 23 SQL blobs і checksum provenance в 11 manifest commits;
 файла приватної конфігурації та IP-логів у reachable history немає.
 Повторний Gitleaks охопив 124 commits: 0 findings.
+Після окремого прямого дозволу власника також виконано локальний
+`reflog expire --expire=now --all` і `gc --prune=now`. Перевірено відсутність
+чотирьох вихідних config blobs та обох вихідних request-log blobs у локальній
+object database. Тимчасову audit-копію старих snapshot trees видалено.
 
 Повідомлення GitHub під час першого push ще показувало старий лічильник
 19 Dependabot alerts. Dependency graph update після push завершився успішно;
