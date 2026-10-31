@@ -95,7 +95,7 @@ class MySQLApplicationTests(unittest.TestCase):
         )
         self.assertIn("request_events", inspect(self.app.extensions["reference_engine"]).get_table_names())
         self.assertEqual(self.app.config["APP_VERSION"], get_version())
-        self.assertEqual(get_version(), "2.1.0")
+        self.assertEqual(get_version(), (ROOT / "VERSION").read_text().strip())
 
     def test_repeat_cli_migrations_and_import_are_idempotent(self):
         outcome = self.runner.invoke(args=["migrate"])
@@ -133,10 +133,10 @@ class MySQLApplicationTests(unittest.TestCase):
                 if path == "/en/unknown/nested":
                     self.assertIn('<html lang="en">', response.text)
                 if path in {"/uk", "/en"}:
-                    self.assertIn("2.1.0", response.text)
+                    self.assertIn(get_version(), response.text)
         captured = [row for row in self.event_rows() if row["event_id"] not in before]
         self.assertEqual(len(captured), len(requests))
-        self.assertTrue(all(row["app_version"] == "2.1.0" for row in captured))
+        self.assertTrue(all(row["app_version"] == get_version() for row in captured))
         self.assertEqual(sum(row["validity"] == "invalid" for row in captured), 3)
         serialized = json.dumps(captured)
         for private_value in ("2000-02-29", "2000-01-01", "2026-10-04", "birth_date"):
@@ -179,7 +179,7 @@ class MySQLApplicationTests(unittest.TestCase):
             self.assertEqual(len(files), 1)
             event = json.loads(files[0].read_text(encoding="utf-8"))
             self.assertEqual(event["status"], 503)
-            self.assertEqual(event["app_version"], "2.1.0")
+            self.assertEqual(event["app_version"], get_version())
         finally:
             for key in ("reference_engine", "analytics_engine"):
                 app.extensions[key].dispose()

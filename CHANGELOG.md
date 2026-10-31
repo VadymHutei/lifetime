@@ -1,6 +1,17 @@
 # Changelog
 
-## Unreleased
+## 2.1.1 — 2026-10-31
+
+- Проведено аудит Git, залежностей, HTTP/privacy та production конфігурації.
+- Вилучено історичні IP-логи з SQL, оновлено provenance checksum без зміни
+  демографічних значень, aliases або retrieval timestamp; за дозволом власника
+  очищено Git-історію від старої приватної конфігурації та request rows.
+- Оновлено hashed runtime/dev locks; усунено advisories certifi/filelock/setuptools.
+  Runtime: SQLAlchemy 2.1.6, Alembic 1.20.1, MarkupSafe 3.0.4, tzdata 2026.6.
+- Контейнер Python 3.14.10 та MySQL 8.4.13 pinned за перевіреними digests.
+- Додано privacy guard, Gitleaks і dev dependency audit у CI, Dependabot;
+  CI actions зафіксовано commit SHA. Небезпечний legacy requirements вилучено.
+- Backup перед upgrade підтримує `BACKUP_PRUNE=false` для збереження всіх копій.
 
 - Додано окреме VPS-розгортання LifeTime: приватні MySQL/app, HTTPS proxy,
   автоматичні backup/retention/TLS jobs та перевірку відновлення.

@@ -1,4 +1,4 @@
-ARG RUNTIME_IMAGE=lifetime:2.1.0-vps-20261031
+ARG RUNTIME_IMAGE=lifetime:2.1.1-security-20261031
 FROM ${RUNTIME_IMAGE}
 USER root
 COPY requirements-dev-lock.txt /qa/requirements-dev-lock.txt
@@ -8,6 +8,7 @@ RUN python -m venv /qa/.venv \
 COPY tests /app/tests
 COPY scripts /app/scripts
 COPY pyproject.toml /app/pyproject.toml
+COPY db_data.sql /app/db_data.sql
 RUN chown -R 10001:10001 /app /qa
 USER 10001:10001
 ENTRYPOINT []

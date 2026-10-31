@@ -1,4 +1,29 @@
-# LifeTime 2.1.0 — середовище й залежності
+# LifeTime — середовище й залежності
+
+## Оновлення безпеки 2.1.1 — 2026-10-31
+
+Актуальний runtime — Python **3.14.10**, MySQL **8.4.13 LTS**.
+Python 3.14.10 є [expedited security release](https://www.python.org/downloads/release/python-31410/);
+MySQL — [офіційний випуск 8.4.13](https://dev.mysql.com/doc/relnotes/mysql/8.4/en/news-8-4-13.html).
+Docker Registry підтвердив immutable index digests:
+
+- Python `sha256:3cabfd7d7aaf394e6040e79fa1eec6ca1c52b74ed9188650472695d9a9326999`.
+- MySQL `sha256:a0225d1ea6631c8bc2385dc4c2faba17bbf1834ecf369e1659a9a382bd8d5dd7`.
+
+PyPI JSON API та resolver підтвердили stable/non-yanked версії:
+SQLAlchemy 2.1.6, Alembic 1.20.1, MarkupSafe 3.0.4, tzdata 2026.6,
+pytest 9.2.0, Ruff 0.17.3, pip-tools 7.6.2. Flask 3.1.3, Gunicorn 26.2.0,
+PyMySQL 1.2.3, cryptography 50.0.2, Werkzeug 3.1.9 та Jinja2 3.1.6
+залишаються актуальними. `pip list --outdated` після встановлення повернув `[]`.
+
+Обидва locks реально перевипущено `pip-tools --upgrade --generate-hashes`
+і встановлено з `--require-hashes`. Dev lock також оновлює certifi до
+2026.10.23, filelock до 4.2.5, setuptools до 84.2.1, усуваючи знайдені
+advisories. Обидва повторні `pip-audit` — без відомих вразливостей.
+Локальний Python 3.14.3 не оновлювався; release перевіряється окремо в Linux
+Python 3.14.10. Деталі — [звіт аудиту](SECURITY_AUDIT_2026-10-31.md).
+
+## Початковий baseline 2.1.0 (історичний)
 
 Дата перевірки: **2026-10-03**. Реалізований стек визначено в `pyproject.toml`; повні resolver locks із SHA-256 — `requirements-lock.txt` та `requirements-dev-lock.txt`. Dockerfile замінено новим runtime. Старий `app/requirements.txt` не використовується.
 

@@ -2,3 +2,5 @@
 *.sh text eol=lf
 # These files form a byte-verified bundle; preserve source bytes on every OS.
 data/life_expectancy/** -text
+# This sanitized provenance file is also SHA-256 verified by the dataset.
+/db_data.sql -text

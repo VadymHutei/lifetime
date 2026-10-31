@@ -14,6 +14,7 @@ from sqlalchemy import select, text
 
 from lifetime import create_app
 from lifetime.analytics.schema import events
+from lifetime.version import get_version
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -60,7 +61,7 @@ for locale in ("uk", "en"):
     body, _ = request("/" + locale)
     assert "https://lifetime.ukubuka.net/" + locale in body
     assert body.count("<h1") == 1
-    assert "2.1.0" in body
+    assert get_version() in body
 request("/readyz")
 request("/static/style.css")
 request("/uk", method="HEAD")

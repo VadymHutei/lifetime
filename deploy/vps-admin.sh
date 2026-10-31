@@ -101,7 +101,9 @@ SQL
         (cd "$destination" && sha256sum lifetime.sql.gz config-state.tgz > SHA256SUMS)
         printf 'Backup created: /opt/lifetime/%s\n' "$destination"
         # Dedicated backup children only; never follow symlinks or touch other projects.
-        find /opt/lifetime/backups -mindepth 1 -maxdepth 1 -type d -mtime +14 -exec rm -rf -- {} +
+        if test "${BACKUP_PRUNE:-true}" = true; then
+            find /opt/lifetime/backups -mindepth 1 -maxdepth 1 -type d -mtime +14 -exec rm -rf -- {} +
+        fi
         ;;
     status)
         dc ps

@@ -1,6 +1,7 @@
 **
 !requirements-dev-lock.txt
 !pyproject.toml
+!db_data.sql
 !tests/
 !tests/**
 !scripts/

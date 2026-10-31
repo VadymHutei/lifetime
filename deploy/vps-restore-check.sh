@@ -6,6 +6,7 @@ test "$(id -u)" = 0
 umask 077
 backup=$(find /opt/lifetime/backups -mindepth 1 -maxdepth 1 -type d | sort | tail -n 1)
 test -n "$backup"
+restore_image=${RESTORE_IMAGE:-$(cat "$backup/image-id.txt")}
 (cd "$backup" && sha256sum --check SHA256SUMS)
 password=$(openssl rand -hex 32)
 printf 'MYSQL_ROOT_PASSWORD=%s\nMYSQL_ROOT_HOST=%%\nMYSQL_DATABASE=lifetime_restore\n' "$password" > .restore-mysql.env
@@ -19,7 +20,7 @@ cleanup() {
 trap cleanup EXIT
 docker run -d --name lifetime-restore-mysql --network lifetime_restore --memory 640m --cpus 0.75 \
     --env-file .restore-mysql.env --tmpfs /var/lib/mysql:rw,size=512m \
-    mysql:8.4@sha256:6ea90827b1100f8f2ae306a539f86d2c264a26ed435a2a9f75551dd5c3aeb242 \
+    mysql:8.4@sha256:a0225d1ea6631c8bc2385dc4c2faba17bbf1834ecf369e1659a9a382bd8d5dd7 \
     --innodb-buffer-pool-size=64M --performance-schema=OFF
 for attempt in $(seq 1 90); do
     if docker exec lifetime-restore-mysql mysqladmin ping -h 127.0.0.1 --silent >/dev/null 2>&1; then break; fi
@@ -28,7 +29,7 @@ done
 docker exec lifetime-restore-mysql sh -c 'umask 077; printf "[client]\nuser=root\npassword=%s\n" "$MYSQL_ROOT_PASSWORD" > /tmp/restore.cnf'
 gzip -dc "$backup/lifetime.sql.gz" | docker exec -i lifetime-restore-mysql mysql --defaults-extra-file=/tmp/restore.cnf --no-login-paths lifetime_restore
 docker run --rm -i --network lifetime_restore --memory 256m --cpus 0.75 --env-file .restore-app.env \
-    lifetime:2.1.0-vps-20261031 python - <<'PY'
+    "$restore_image" python - <<'PY'
 import json
 from sqlalchemy import text
 from lifetime import create_app
