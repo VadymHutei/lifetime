@@ -9,7 +9,7 @@ Docker/Compose/CI та фактичну production конфігурацію VPS.
 
 | Знахідка | Доказ і ризик | Виправлення |
 | --- | --- | --- |
-| Приватна legacy DB-конфігурація в Git-історії | Чотири версії `app/config.py` містили literal DB password; файл давно видалений із HEAD. Чинність старого account не встановлена. | За прямим дозволом власника файл вилучається з історії всіх опублікованих гілок і локальних release tags; старі credentials слід відкликати на колишньому сервері. |
+| Приватна legacy DB-конфігурація в Git-історії | Чотири версії `app/config.py` містили literal DB password; файл давно видалений із HEAD. Чинність старого account не встановлена. | За прямим дозволом власника файл вилучено з історії всіх опублікованих гілок і локальних release tags; старі credentials слід відкликати на колишньому сервері. |
 | Історичні IP-логи в SQL | `db_data.sql`: 637 IPv4 occurrences; `db/db_log.sql`: 142. Це дані запитів, а не демографічний довідник. | Вилучено цілі `INSERT INTO log` із поточних файлів та історії; schema й довідник збережені. Privacy guard забороняє повторний коміт таких rows. |
 | Вразливі dev dependencies | `certifi 2026.7.22`, `filelock 4.0.9`, `setuptools 84.0.0`: 16 advisory records, із них один duplicate certifi record. Runtime lock до змін — без відомих advisories. | Resolver locks оновлено з SHA-256; certifi 2026.10.23, filelock 4.2.5, setuptools 84.2.1. Обидва повторні audits — clean. |
 | Застарілий Python image | Runtime 3.14.8; 3.14.10 є security release. | Python 3.14.10-slim із verified immutable digest; MySQL також оновлено в межах LTS до 8.4.13. |
@@ -77,6 +77,45 @@ Backup виконувався з `BACKUP_PRUNE=false`; наявні копії �
 - Runtime/dev pip-audit — no known vulnerabilities; pip outdated — `[]`.
 - Offline dataset rebuild та checksums — passed; wheel/sdist build — passed.
 - Нові repository privacy regression tests локально — 2 passed.
+- Після виправлення Docker permissions: non-root runtime factory/snapshot
+  без мережі — passed; QA без зміни runtime ownership — **19 passed,
+  33 subtests passed**.
+- GitHub Actions на release code commit `25d30a9`: **109 passed**,
+  repository-safety, обидва dependency audits, wheel/sdist metadata та
+  Compose build/fresh-MySQL startup/HTTP smoke — success.
+  [Фактичний CI run](https://github.com/VadymHutei/lifetime/actions/runs/41149099439).
+
+## Завершення розгортання та очищення Git
+
+LifeTime 2.1.1 працює на VPS з Python 3.14.10 та MySQL 8.4.13.
+Release image — `lifetime:2.1.1-security-20261031-r2`. Першу спробу з image
+без `-r2` зупинив ImportError через права каталогів; чинний app 2.1.0 тоді
+залишався healthy. Після виправлення виконано explicit migrate/import,
+успішний readiness нового app, nginx test і повний HTTPS/privacy smoke.
+
+Безпосередньо перед MySQL upgrade створено й успішно відновлено backup
+`/opt/lifetime/backups/20261031T000721-44336`. Новий dataset provenance
+активовано без зміни числових спостережень або schema revisions.
+HTTPS GET uk/en, HEAD/static, POST result, 301/410/404/405/413, configured
+canonical, 458 sitemap URL, forwarding overwrite, redaction та повторний
+edge import перевірено: 16 request IDs → 16 events, privacy passed, spool
+порожній. Raw IP/DOB/синтетичного секрету у журналах немає.
+Kyiv Alert: той самий container ID, StartedAt і RestartCount 0, healthy.
+Maintenance timers повернуті в active; секрети й чужі volumes не змінювалися.
+
+Atomic force-push із точними `--force-with-lease` оновив **11 remote-гілок**,
+включно з default `master` і `codex/vps-deployment`. Локальні annotated
+`v2.0.0`/`v2.1.0` теж очищено; на початку вони ще не були опубліковані.
+За окремим дозволом очищено **4 локальні tree refs/codex**, які залишилися
+тільки локально. Review tree security commit не змінювався під час rewrite.
+Перевірено 23 SQL blobs і checksum provenance в 11 manifest commits;
+файла приватної конфігурації та IP-логів у reachable history немає.
+Повторний Gitleaks охопив 124 commits: 0 findings.
+
+Повідомлення GitHub під час першого push ще показувало старий лічильник
+19 Dependabot alerts. Dependency graph update після push завершився успішно;
+приватний стан окремих alerts не читався. Підтвердження відсутності відомих
+вразливостей актуальних Python locks — два pip-audit у CI.
 
 ## Межі та подальші дії
 

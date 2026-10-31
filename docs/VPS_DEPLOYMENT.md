@@ -1,5 +1,22 @@
 # LifeTime на VPS
 
+## Поточне оновлення безпеки — 2026-10-31
+
+Production оновлено до **2.1.1**, image
+`lifetime:2.1.1-security-20261031-r2`: Python 3.14.10, MySQL 8.4.13.
+Перед upgrade перевірено backup/isolated restore; HTTPS/privacy smoke
+успішний, Kyiv Alert healthy без рестарту. Старий image 2.1.0 збережено.
+Початковий image 2.1.1 без `-r2` не використовувати: виправлення прав
+вкладених каталогів входить у `-r2`.
+Dataset provenance id:
+`b6f5d7b916c784ffee8078f1b59a0ab86d4124c6c0bf969f74a3ad9435aa2d34`;
+numeric values й retrieval timestamp незмінні. Schema revisions незмінні.
+Подробиці та межі очищення Git — [аудит](SECURITY_AUDIT_2026-10-31.md).
+Commit IDs у початковому описі нижче передують погодженому очищенню історії;
+поточний реліз визначається annotated tag `v2.1.1`.
+
+## Первинне розгортання 2.1.0
+
 Фактичне розгортання: **31 жовтня 2026**, LifeTime **2.1.0**,
 [https://lifetime.ukubuka.net](https://lifetime.ukubuka.net).
 SSH — `ssh codex-vps`, користувач `codex`, адміністративні команди через
