@@ -389,9 +389,9 @@ defusedxml==0.7.1 \
     --hash=sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69 \
     --hash=sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61
     # via py-serializable
-filelock==4.2.5 \
-    --hash=sha256:37d8fa4f8b5e9233612e68ab23bf64cae41771322c8797361088ae2895b12894 \
-    --hash=sha256:46ce42d27e5cdde09ee7197349663e97cb106679bd9e75db3a09679fbc7aa1a8
+filelock==4.2.7 \
+    --hash=sha256:31f6f7e3a8b6f0bd89114d30c5d5218ea1cfb63e5c4aa695b7559314a209bc7f \
+    --hash=sha256:d08972bbca2b8767ee552aff877b091dd111ffb1d22de7de885766ea7d719d5e
     # via cachecontrol
 flask==3.1.3 \
     --hash=sha256:0ef0e52b8a9cd932855379197dd8f94047b359ca0a78695144304cb45f87c9eb \
